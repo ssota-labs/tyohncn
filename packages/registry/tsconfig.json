@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "paths": {
+      "@/lib/utils": ["./lib/utils.ts"],
+      "@/hooks/use-mobile": ["./hooks/use-mobile.ts"],
+      "@/components/ui/*": ["./ui/*"]
+    }
+  },
+  "include": ["ui/**/*", "lib/**/*", "hooks/**/*"]
+}
