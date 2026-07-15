@@ -79,7 +79,7 @@ export async function GET() {
       suggestedCli: [
         "tyohncn init --style mira --icon lucide",
         "tyohncn add button input card",
-        "tyohncn pack add ssota",
+        "tyohncn component new callout --mode css-vars",
         "tyohncn studio",
       ],
       note: "Demo mode — set TYOHN_PROJECT_ROOT or run `tyohncn studio` from a project.",
@@ -102,7 +102,6 @@ export async function GET() {
   const packs = await readInstalledPacks(root)
 
   const style = config?.style ?? "mira"
-  const icon = config?.iconLibrary ?? "lucide"
 
   const body: ProjectInfo = {
     mode: "project",
@@ -116,7 +115,7 @@ export async function GET() {
         ? "tyohncn pack add mira-vars"
         : "tyohncn pack add ssota",
       `tyohncn apply --style ${style === "mira" ? "vega" : "mira"}`,
-      `tyohncn apply --icon ${icon === "lucide" ? "tabler" : "lucide"}`,
+      "tyohncn component new callout --mode css-vars --styles mira-vars",
       "tyohncn pack new my-brand --mode css-vars",
     ],
     note: "Preview only — confirm style/icon/pack changes with tyohncn apply or pack add (no write-back from Studio yet).",
