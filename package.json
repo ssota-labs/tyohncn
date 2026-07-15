@@ -12,7 +12,9 @@
     "registry:build": "pnpm --filter @tyohn/registry build",
     "cli:build": "pnpm --filter tyohncn build",
     "publish:packages": "node scripts/publish-packages.mjs",
-    "publish:packages:dry": "node scripts/publish-packages.mjs --dry-run"
+    "publish:packages:dry": "node scripts/publish-packages.mjs --dry-run",
+    "sync:skills": "node scripts/sync-skills.mjs",
+    "sync:skills:check": "node scripts/sync-skills.mjs --check"
   },
   "devDependencies": {
     "turbo": "^2.5.4",
