@@ -2,6 +2,24 @@
   "version": 1,
   "items": [
     {
+      "name": "luma",
+      "file": "styles/style-luma.css",
+      "scopeClass": "style-luma",
+      "mode": "apply"
+    },
+    {
+      "name": "lyra",
+      "file": "styles/style-lyra.css",
+      "scopeClass": "style-lyra",
+      "mode": "apply"
+    },
+    {
+      "name": "maia",
+      "file": "styles/style-maia.css",
+      "scopeClass": "style-maia",
+      "mode": "apply"
+    },
+    {
       "name": "mira",
       "file": "styles/style-mira.css",
       "scopeClass": "style-mira",
@@ -10,7 +28,7 @@
     {
       "name": "mira-vars",
       "file": "styles/style-mira-vars.css",
-      "scopeClass": "style-mira-vars",
+      "scopeClass": "style-mira",
       "mode": "css-vars"
     },
     {
@@ -20,10 +38,22 @@
       "mode": "apply"
     },
     {
+      "name": "rhea",
+      "file": "styles/style-rhea.css",
+      "scopeClass": "style-rhea",
+      "mode": "apply"
+    },
+    {
+      "name": "sera",
+      "file": "styles/style-sera.css",
+      "scopeClass": "style-sera",
+      "mode": "apply"
+    },
+    {
       "name": "ssota",
       "file": "styles/style-ssota.css",
       "scopeClass": "style-ssota",
-      "mode": "apply"
+      "mode": "css-vars"
     },
     {
       "name": "vega",
@@ -34,7 +64,7 @@
     {
       "name": "vega-vars",
       "file": "styles/style-vega-vars.css",
-      "scopeClass": "style-vega-vars",
+      "scopeClass": "style-vega",
       "mode": "css-vars"
     }
   ]

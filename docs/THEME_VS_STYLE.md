@@ -15,8 +15,10 @@ Lives in `packages/registry/styles/style-*.css`, scoped under `.style-<preset>`.
 
 | Horizon | Representation | Files |
 |---------|----------------|-------|
-| Near (Phase 1) | `.cn-* { @apply … }` | `style-mira.css`, `style-vega.css`, `style-nova.css` |
+| Near (Phase 1) | `.cn-* { @apply … }` | shadcn packs: `mira`, `lyra`, `nova`, `rhea`, `luma`, `maia`, `vega`, `sera` |
 | Mid (Phase 2) | `.cn-* { --cn-*: …; height: var(--cn-*) }` | `style-mira-vars.css`, `style-vega-vars.css`, `style-ssota.css` |
+
+Upstream shadcn ships eight visual presets. Density cue (default button height): mira `h-7` → lyra/nova/rhea `h-8` → luma/maia/vega `h-9` → sera `h-10`.
 
 Style answers: “how dense / rounded / chrome-y is the button?”
 
