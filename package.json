@@ -1,0 +1,23 @@
+{
+  "name": "tyohncn",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "dev:studio": "pnpm --filter @tyohn/studio dev",
+    "dev:docs": "pnpm --filter @tyohn/docs dev",
+    "registry:build": "pnpm --filter @tyohn/registry build",
+    "cli:build": "pnpm --filter tyohncn build"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.12.4",
+  "engines": {
+    "node": ">=22"
+  }
+}

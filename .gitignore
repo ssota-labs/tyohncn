@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+.pnpm-store
+dist
+.next
+.turbo
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+!.env.example
+coverage
+*.log
+
+# Generated / local
+examples/smoke-app/node_modules
+examples/smoke-app/.next
