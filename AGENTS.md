@@ -2,7 +2,10 @@
 
 ## Cursor Cloud specific instructions
 
-- **Current state: documentation-only repository (Roadmap Phase 0).** The repo contains only `README.md`, `VISION.md`, and `ROADMAP.md`. There is no source code, no package manifest, no build tooling, no config, and no runnable services yet. See `ROADMAP.md` (Phase 0 exit criteria is "코드 없음" / no code).
-- **Nothing to build, lint, test, or run today.** Do not fabricate an application; implementation is planned to begin in Roadmap Phase 1.
-- **Planned stack (for when implementation starts):** a Node/TypeScript monorepo — a `shadcn/ui` fork (CLI + Base UI component registry) plus a web Studio. Package manager is not yet decided (`README.md` Phase 0).
-- **Update script:** the startup update script is a lockfile-guarded install (`pnpm`/`yarn`/`npm`), so it is a no-op while the repo is docs-only and automatically installs dependencies once a manifest/lockfile lands. Node 22, npm 10, pnpm 10, and Python 3.12 are preinstalled on the VM.
+- **Current state: pnpm + Turborepo monorepo (Phases 0–3 MVP done; Phase 4 publish/ssota migration open).** Packages: `packages/cli` (`tyohncn`), `packages/registry` (`@tyohn/registry`), `apps/studio`, `apps/docs`. See `docs/MONOREPO.md` and `ROADMAP.md`.
+- **Build & verify:** `pnpm install`, `pnpm registry:build`, `pnpm cli:build`, `pnpm --filter tyohncn test`, `pnpm --filter @tyohn/studio build`.
+- **CLI contract:** external mode only — never `transformStyleMap` / strip `cn-*`. `apply --style` swaps CSS only.
+- **Skills (required for Next.js):** Install/use via [skills.sh](https://skills.sh) like ssota — canonical `.agents/skills/`, mirrors `.cursor/skills/` + `.claude/skills/`, lockfile `skills-lock.json`. Do not edit mirrors directly. Key skills: `vercel-react-best-practices`, `next-dev-loop`, `shadcn`, `web-design-guidelines`. Repo-local CLI skill: `skills/tyohncn/SKILL.md`.
+- **ssota boundary:** tyohncn = infra; ssota = consumer (`style-ssota`). See `docs/SSOTA.md`.
+- **Upstream:** manual agent sync from shadcn-ui/ui — `docs/UPSTREAM_SYNC.md`.
+- **Update script:** lockfile-guarded `pnpm` install on startup. Node 22+, pnpm 10 preinstalled.
