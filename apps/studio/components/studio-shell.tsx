@@ -5,9 +5,11 @@ import {
   Check,
   Copy,
   Eye,
+  FolderGit2,
   Palette,
   RotateCcw,
   SlidersHorizontal,
+  Terminal,
 } from "lucide-react"
 
 import {
@@ -54,6 +56,20 @@ type ScopeClass =
   | "style-vega"
 type VariableMap = Record<string, string>
 type VariableStyles = React.CSSProperties & Record<string, string>
+
+type ProjectInfo = {
+  mode: "project" | "demo"
+  root: string | null
+  config: {
+    style?: string
+    iconLibrary?: string
+    mode?: string
+  } | null
+  components: string[]
+  styles: string[]
+  suggestedCli: string[]
+  note: string
+}
 
 const themeTokens = [
   ["--primary", "Primary"],
@@ -266,6 +282,41 @@ export function StudioShell() {
   const [themeOverrides, setThemeOverrides] = React.useState<VariableMap>({})
   const [styleOverrides, setStyleOverrides] = React.useState<VariableMap>({})
   const [copied, setCopied] = React.useState(false)
+  const [project, setProject] = React.useState<ProjectInfo | null>(null)
+
+  React.useEffect(() => {
+    let cancelled = false
+    fetch("/api/project")
+      .then((r) => r.json())
+      .then((data: ProjectInfo) => {
+        if (cancelled) return
+        setProject(data)
+        const style = data.config?.style
+        if (style && style in presets) {
+          setPresetId(style as PresetId)
+        }
+        const icon = data.config?.iconLibrary
+        if (icon && ICON_LIBRARY_OPTIONS.some((o) => o.id === icon)) {
+          setIconLibrary(icon as IconLibraryName)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setProject({
+            mode: "demo",
+            root: null,
+            config: null,
+            components: [],
+            styles: [],
+            suggestedCli: [],
+            note: "Could not load project info.",
+          })
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const preset = presets[presetId]
   const previewStyle = {
@@ -329,6 +380,8 @@ export function StudioShell() {
 
         <section className="grid gap-6 lg:grid-cols-[320px_1fr]">
           <aside className="flex flex-col gap-4">
+            <ProjectMetaPanel project={project} />
+
             <Panel title="Preset switcher" icon={<Palette className="size-4" />}>
               <label className="grid gap-2 text-sm font-medium">
                 Active preset
@@ -346,6 +399,10 @@ export function StudioShell() {
               </label>
               <p className="text-sm leading-6 text-muted-foreground">
                 {preset.description}
+              </p>
+              <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
+                Preview only. Confirm with{" "}
+                <code className="text-[0.7rem]">tyohncn apply --style {presetId}</code>
               </p>
             </Panel>
 
@@ -577,6 +634,101 @@ function Catalog() {
         </Card>
       </section>
     </div>
+  )
+}
+
+function ProjectMetaPanel({ project }: { project: ProjectInfo | null }) {
+  const [copiedCmd, setCopiedCmd] = React.useState<string | null>(null)
+
+  async function copyCmd(cmd: string) {
+    await navigator.clipboard.writeText(cmd)
+    setCopiedCmd(cmd)
+    window.setTimeout(() => setCopiedCmd(null), 1200)
+  }
+
+  if (!project) {
+    return (
+      <Panel title="Project" icon={<FolderGit2 className="size-4" />}>
+        <p className="text-sm text-muted-foreground">Loading project…</p>
+      </Panel>
+    )
+  }
+
+  return (
+    <Panel title="Project" icon={<FolderGit2 className="size-4" />}>
+      <div className="grid gap-3 text-sm">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Mode
+          </p>
+          <p className="mt-1 font-medium">{project.mode}</p>
+        </div>
+        {project.root ? (
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Root
+            </p>
+            <p className="mt-1 break-all font-mono text-xs leading-5">
+              {project.root}
+            </p>
+          </div>
+        ) : null}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Style
+            </p>
+            <p className="mt-1 font-medium">
+              {project.config?.style ?? "—"}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Icons
+            </p>
+            <p className="mt-1 font-medium">
+              {project.config?.iconLibrary ?? "—"}
+            </p>
+          </div>
+        </div>
+        {project.components.length > 0 ? (
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Installed ({project.components.length})
+            </p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              {project.components.join(", ")}
+            </p>
+          </div>
+        ) : null}
+        <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
+          {project.note}
+        </p>
+        {project.suggestedCli.length > 0 ? (
+          <div className="grid gap-2">
+            <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <Terminal className="size-3.5" />
+              Suggested CLI
+            </p>
+            {project.suggestedCli.map((cmd) => (
+              <button
+                key={cmd}
+                type="button"
+                onClick={() => void copyCmd(cmd)}
+                className="flex items-start justify-between gap-2 rounded-md border bg-background px-2.5 py-2 text-left font-mono text-[0.7rem] leading-5 hover:bg-muted/50"
+              >
+                <span className="break-all">{cmd}</span>
+                {copiedCmd === cmd ? (
+                  <Check className="mt-0.5 size-3.5 shrink-0" />
+                ) : (
+                  <Copy className="mt-0.5 size-3.5 shrink-0 opacity-50" />
+                )}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </Panel>
   )
 }
 
