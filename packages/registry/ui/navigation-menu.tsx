@@ -1,8 +1,8 @@
-import { ChevronDownIcon } from "lucide-react"
 import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/navigation-menu"
 import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 function NavigationMenu({
   align = "start",
@@ -71,7 +71,12 @@ function NavigationMenuTrigger({
       {...props}
     >
       {children}{" "}
-      <ChevronDownIcon
+      <IconPlaceholder
+        lucide="ChevronDownIcon"
+        tabler="IconChevronDown"
+        hugeicons="ArrowDown01Icon"
+        phosphor="CaretDownIcon"
+        remixicon="RiArrowDownSLine"
         className="cn-navigation-menu-trigger-icon"
         aria-hidden="true"
       />

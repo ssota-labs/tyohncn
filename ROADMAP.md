@@ -106,3 +106,4 @@ pnpm + Turborepo monorepo에서 구현 중이다. 원칙: **ssota 방식**, shad
 | 2026-07-15 | Phase 0 문서-only로 시작 |
 | 2026-07-15 | pnpm + Turborepo, `@tyohn/*` 스코프, 구현 착수 |
 | 2026-07-15 | Next.js 앱은 skills.sh 스킬 기준으로 진행 (ssota ENV-02 미러) |
+| 2026-07-15 | 아이콘 라이브러리 선택 (lucide/tabler/hugeicons/phosphor/remixicon) — shadcn과 동일 |

@@ -1,7 +1,7 @@
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion"
 
 import { cn } from "@/lib/utils"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
   return (
@@ -39,12 +39,22 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <ChevronDownIcon
+        <IconPlaceholder
+          lucide="ChevronDownIcon"
+          tabler="IconChevronDown"
           data-slot="accordion-trigger-icon"
+          hugeicons="ArrowDown01Icon"
+          phosphor="CaretDownIcon"
+          remixicon="RiArrowDownSLine"
           className="cn-accordion-trigger-icon pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
         />
-        <ChevronUpIcon
+        <IconPlaceholder
+          lucide="ChevronUpIcon"
+          tabler="IconChevronUp"
           data-slot="accordion-trigger-icon"
+          hugeicons="ArrowUp01Icon"
+          phosphor="CaretUpIcon"
+          remixicon="RiArrowUpSLine"
           className="cn-accordion-trigger-icon pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
         />
       </AccordionPrimitive.Trigger>

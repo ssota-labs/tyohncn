@@ -30,23 +30,25 @@ tyohncn is an **external-style** fork of shadcn/ui. Components ship with
 ### `tyohncn init`
 
 Creates `tyohncn.json`, copies theme + initial style CSS, wires
-`globals.css` import.
+`globals.css` import, and records the icon library.
 
 ```bash
-tyohncn init --style mira --css app/globals.css
+tyohncn init --style mira --icon lucide --css app/globals.css
 ```
+
+Icon libraries (same as shadcn): `lucide` | `tabler` | `hugeicons` | `phosphor` | `remixicon`
 
 Config defaults (`mode: external`, `base: base-ui`):
 
 - `styles/style-<preset>.css` — scoped under `.style-<preset>`
 - `app/globals.css` — `@import` theme + active style
-- `tyohncn.json` — aliases, css paths, active style name
+- `tyohncn.json` — aliases, css paths, active style, `iconLibrary`
 
 ### `tyohncn add <components...>`
 
 Copies components from `@tyohn/registry` with **cn-* hooks intact**.
-Rewrites `@/` import aliases to match `tyohncn.json`. Never runs
-`transformStyleMap` or strips `cn-*`.
+Resolves `IconPlaceholder` into the configured icon library (like shadcn
+`transformIcons`). Never runs `transformStyleMap` or strips `cn-*`.
 
 ```bash
 tyohncn add button input card dialog
@@ -54,15 +56,14 @@ tyohncn add button input card dialog
 
 Installs transitive registry deps and `lib/utils.ts` / hooks as needed.
 
-### `tyohncn apply --style <preset>`
-
-Swaps the active style CSS file and updates `globals.css` import.
-**Does not modify component TSX.**
+### `tyohncn apply`
 
 ```bash
+# CSS only — component TSX unchanged
 tyohncn apply --style vega
-tyohncn apply --style mira-vars
-tyohncn apply --style ssota
+
+# Re-resolve icons from registry into installed components
+tyohncn apply --icon tabler
 ```
 
 ### `tyohncn list <kind>`
@@ -70,6 +71,7 @@ tyohncn apply --style ssota
 ```bash
 tyohncn list components
 tyohncn list styles
+tyohncn list icons
 ```
 
 ## Style presets

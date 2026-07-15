@@ -1,7 +1,5 @@
 "use client"
 
-import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
-
 import * as React from "react"
 import {
   DayPicker,
@@ -12,6 +10,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 function Calendar({
   className,
@@ -148,7 +147,12 @@ function Calendar({
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
-              <ChevronLeftIcon
+              <IconPlaceholder
+                lucide="ChevronLeftIcon"
+                tabler="IconChevronLeft"
+                hugeicons="ArrowLeftIcon"
+                phosphor="CaretLeftIcon"
+                remixicon="RiArrowLeftSLine"
                 className={cn("cn-rtl-flip size-4", className)}
                 {...props}
               />
@@ -157,7 +161,12 @@ function Calendar({
 
           if (orientation === "right") {
             return (
-              <ChevronRightIcon
+              <IconPlaceholder
+                lucide="ChevronRightIcon"
+                tabler="IconChevronRight"
+                hugeicons="ArrowRightIcon"
+                phosphor="CaretRightIcon"
+                remixicon="RiArrowRightSLine"
                 className={cn("cn-rtl-flip size-4", className)}
                 {...props}
               />
@@ -165,7 +174,12 @@ function Calendar({
           }
 
           return (
-            <ChevronDownIcon
+            <IconPlaceholder
+              lucide="ChevronDownIcon"
+              tabler="IconChevronDown"
+              hugeicons="ArrowDownIcon"
+              phosphor="CaretDownIcon"
+              remixicon="RiArrowDownSLine"
               className={cn("size-4", className)}
               {...props}
             />

@@ -21,7 +21,13 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
 import { StylePackLink, type StylePackId } from "@/components/style-pack-link"
+import {
+  ICON_LIBRARY_OPTIONS,
+  IconLibraryProvider,
+  type IconLibraryName,
+} from "@/components/icon-placeholder"
 import { cn } from "@/lib/utils"
 
 type PresetId =
@@ -255,6 +261,8 @@ const buttonSizes = ["xs", "sm", "default", "lg"] as const
 
 export function StudioShell() {
   const [presetId, setPresetId] = React.useState<PresetId>("mira-vars")
+  const [iconLibrary, setIconLibrary] =
+    React.useState<IconLibraryName>("lucide")
   const [themeOverrides, setThemeOverrides] = React.useState<VariableMap>({})
   const [styleOverrides, setStyleOverrides] = React.useState<VariableMap>({})
   const [copied, setCopied] = React.useState(false)
@@ -294,6 +302,7 @@ export function StudioShell() {
   }
 
   return (
+    <IconLibraryProvider library={iconLibrary}>
     <main className="min-h-screen bg-background text-foreground">
       <StylePackLink packId={preset.stylePackId} />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-6 md:px-8 md:py-8">
@@ -337,6 +346,31 @@ export function StudioShell() {
               </label>
               <p className="text-sm leading-6 text-muted-foreground">
                 {preset.description}
+              </p>
+            </Panel>
+
+            <Panel title="Icon library" icon={<Eye className="size-4" />}>
+              <label className="grid gap-2 text-sm font-medium">
+                Active icons
+                <select
+                  value={iconLibrary}
+                  onChange={(event) =>
+                    setIconLibrary(event.target.value as IconLibraryName)
+                  }
+                  className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none ring-ring/30 transition focus:ring-2"
+                >
+                  {ICON_LIBRARY_OPTIONS.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="text-sm leading-6 text-muted-foreground">
+                Same libraries as shadcn: Lucide, Tabler, HugeIcons, Phosphor,
+                Remix. CLI bakes the choice at{" "}
+                <code className="text-xs">add</code> /{" "}
+                <code className="text-xs">apply --icon</code>.
               </p>
             </Panel>
 
@@ -434,6 +468,7 @@ export function StudioShell() {
         </section>
       </div>
     </main>
+    </IconLibraryProvider>
   )
 }
 
@@ -489,6 +524,10 @@ function Catalog() {
             <Input placeholder="Placeholder text" />
             <Input defaultValue="hello@tyohn.dev" type="email" />
             <Input aria-invalid placeholder="Invalid state" />
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox defaultChecked />
+              Checkbox uses IconPlaceholder (switches with icon library)
+            </label>
           </CardContent>
           <CardFooter className="justify-between border-t">
             <span className="text-sm text-muted-foreground">

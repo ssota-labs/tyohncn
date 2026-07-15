@@ -182,7 +182,10 @@ export async function installComponent(
   }
 
   const src = path.join(registry, item.file)
-  const source = rewriteComponentSource(await fs.readFile(src, "utf8"), config)
+  let source = rewriteComponentSource(await fs.readFile(src, "utf8"), config)
+  // Resolve IconPlaceholder → selected icon library (shadcn-compatible)
+  const { transformIconPlaceholders } = await import("./transform-icons.js")
+  source = transformIconPlaceholders(source, config.iconLibrary)
   const uiRel = config.aliases.ui.replace(/^@\//, "")
   const dest = path.join(root, uiRel, `${name}.tsx`)
   await fs.ensureDir(path.dirname(dest))

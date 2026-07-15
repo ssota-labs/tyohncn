@@ -1,7 +1,7 @@
-import { ChevronDownIcon } from "lucide-react"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 type NativeSelectProps = Omit<React.ComponentProps<"select">, "size"> & {
   size?: "sm" | "default"
@@ -27,7 +27,12 @@ function NativeSelect({
         className="cn-native-select outline-none disabled:pointer-events-none disabled:cursor-not-allowed"
         {...props}
       />
-      <ChevronDownIcon
+      <IconPlaceholder
+        lucide="ChevronDownIcon"
+        tabler="IconSelector"
+        hugeicons="UnfoldMoreIcon"
+        phosphor="CaretDownIcon"
+        remixicon="RiArrowDownSLine"
         className="cn-native-select-icon pointer-events-none absolute select-none"
         aria-hidden="true"
         data-slot="native-select-icon"

@@ -2,11 +2,13 @@ import fs from "fs-extra"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
+import type { IconLibraryName } from "./icon-libraries.js"
 
 const require = createRequire(import.meta.url)
 
 export type TyohnConfig = {
   style: string
+  iconLibrary: IconLibraryName
   base: "base-ui"
   mode: "external"
   aliases: {
@@ -25,6 +27,7 @@ export type TyohnConfig = {
 
 export const DEFAULT_CONFIG: TyohnConfig = {
   style: "mira",
+  iconLibrary: "lucide",
   base: "base-ui",
   mode: "external",
   aliases: {
@@ -63,7 +66,14 @@ export function configPath(root: string) {
 export async function readConfig(root: string): Promise<TyohnConfig | null> {
   const file = configPath(root)
   if (!(await fs.pathExists(file))) return null
-  return fs.readJson(file)
+  const raw = (await fs.readJson(file)) as Partial<TyohnConfig>
+  return {
+    ...DEFAULT_CONFIG,
+    ...raw,
+    aliases: { ...DEFAULT_CONFIG.aliases, ...raw.aliases },
+    css: { ...DEFAULT_CONFIG.css, ...raw.css },
+    iconLibrary: raw.iconLibrary ?? DEFAULT_CONFIG.iconLibrary,
+  }
 }
 
 export async function writeConfig(root: string, config: TyohnConfig) {

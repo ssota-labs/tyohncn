@@ -7,8 +7,7 @@
       "type": "registry:ui",
       "file": "ui/accordion.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": []
     },
@@ -74,8 +73,7 @@
       "type": "registry:ui",
       "file": "ui/breadcrumb.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": []
     },
@@ -116,7 +114,6 @@
       "type": "registry:ui",
       "file": "ui/calendar.tsx",
       "npmDependencies": [
-        "lucide-react",
         "react-day-picker"
       ],
       "registryDependencies": [
@@ -135,7 +132,6 @@
       "type": "registry:ui",
       "file": "ui/carousel.tsx",
       "npmDependencies": [
-        "lucide-react",
         "embla-carousel-react"
       ],
       "registryDependencies": [
@@ -173,8 +169,7 @@
       "type": "registry:ui",
       "file": "ui/combobox.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": [
         "button",
@@ -186,7 +181,6 @@
       "type": "registry:ui",
       "file": "ui/command.tsx",
       "npmDependencies": [
-        "lucide-react",
         "cmdk"
       ],
       "registryDependencies": [
@@ -199,8 +193,7 @@
       "type": "registry:ui",
       "file": "ui/context-menu.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": []
     },
@@ -239,8 +232,7 @@
       "type": "registry:ui",
       "file": "ui/dropdown-menu.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": []
     },
@@ -301,7 +293,6 @@
       "type": "registry:ui",
       "file": "ui/input-otp.tsx",
       "npmDependencies": [
-        "lucide-react",
         "input-otp"
       ],
       "registryDependencies": []
@@ -349,8 +340,7 @@
       "type": "registry:ui",
       "file": "ui/menubar.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": [
         "dropdown-menu"
@@ -368,7 +358,6 @@
       "type": "registry:ui",
       "file": "ui/message-scroller.tsx",
       "npmDependencies": [
-        "lucide-react",
         "@shadcn/react"
       ],
       "registryDependencies": [
@@ -379,9 +368,7 @@
       "name": "native-select",
       "type": "registry:ui",
       "file": "ui/native-select.tsx",
-      "npmDependencies": [
-        "lucide-react"
-      ],
+      "npmDependencies": [],
       "registryDependencies": []
     },
     {
@@ -390,8 +377,7 @@
       "file": "ui/navigation-menu.tsx",
       "npmDependencies": [
         "@base-ui/react",
-        "class-variance-authority",
-        "lucide-react"
+        "class-variance-authority"
       ],
       "registryDependencies": []
     },
@@ -399,9 +385,7 @@
       "name": "pagination",
       "type": "registry:ui",
       "file": "ui/pagination.tsx",
-      "npmDependencies": [
-        "lucide-react"
-      ],
+      "npmDependencies": [],
       "registryDependencies": [
         "button"
       ]
@@ -454,8 +438,7 @@
       "type": "registry:ui",
       "file": "ui/select.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": []
     },
@@ -473,8 +456,7 @@
       "type": "registry:ui",
       "file": "ui/sheet.tsx",
       "npmDependencies": [
-        "@base-ui/react",
-        "lucide-react"
+        "@base-ui/react"
       ],
       "registryDependencies": [
         "button"
@@ -486,8 +468,7 @@
       "file": "ui/sidebar.tsx",
       "npmDependencies": [
         "@base-ui/react",
-        "class-variance-authority",
-        "lucide-react"
+        "class-variance-authority"
       ],
       "registryDependencies": [
         "button",
@@ -519,7 +500,6 @@
       "type": "registry:ui",
       "file": "ui/sonner.tsx",
       "npmDependencies": [
-        "lucide-react",
         "sonner"
       ],
       "registryDependencies": []

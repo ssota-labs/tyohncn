@@ -6,6 +6,9 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/components/ui/*": ["../../packages/registry/ui/*"],
+      "@/components/icon-placeholder": [
+        "../../packages/registry/components/icon-placeholder.tsx"
+      ],
       "@/hooks/*": ["../../packages/registry/hooks/*"],
       "@/lib/utils": ["../../packages/registry/lib/utils.ts"],
       "@/*": ["./*"]

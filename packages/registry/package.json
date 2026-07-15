@@ -7,6 +7,7 @@
     "ui",
     "lib",
     "hooks",
+    "components",
     "styles",
     "theme",
     "manifest",
@@ -20,6 +21,7 @@
     "./manifest/styles.json": "./manifest/styles.json",
     "./manifest/tokens.json": "./manifest/tokens.json",
     "./ui/*": "./ui/*",
+    "./components/icon-placeholder": "./components/icon-placeholder.tsx",
     "./lib/utils": "./lib/utils.ts",
     "./hooks/use-mobile": "./hooks/use-mobile.ts"
   },
@@ -30,12 +32,25 @@
   "peerDependencies": {
     "@shadcn/react": ">=0.0.0",
     "@base-ui/react": "^1.0.0",
+    "@hugeicons/core-free-icons": ">=1.0.0",
+    "@hugeicons/react": ">=1.0.0",
+    "@phosphor-icons/react": ">=2.0.0",
+    "@remixicon/react": ">=4.0.0",
+    "@tabler/icons-react": ">=3.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-react": ">=0.400.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@hugeicons/core-free-icons": { "optional": true },
+    "@hugeicons/react": { "optional": true },
+    "@phosphor-icons/react": { "optional": true },
+    "@remixicon/react": { "optional": true },
+    "@tabler/icons-react": { "optional": true },
+    "lucide-react": { "optional": true }
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
