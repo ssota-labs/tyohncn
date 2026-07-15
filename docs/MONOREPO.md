@@ -19,8 +19,9 @@ tyohncn/
     studio/          # Next.js Studio (@tyohn/studio; `tyohncn studio`)
     docs/            # Docs site
   packages/
-    cli/             # published as `tyohncn`
-    registry/        # Base UI components + styles + theme
+    cli/             # published as `tyohncn` (bundles official packs on prepack)
+    registry/        # Base UI components + builtin styles + theme
+    official-packs/  # Faraday-style design packs (ssota, mira-vars, …)
   plugins/           # Faraday-style installable agent skills (skills.sh)
   examples/
     smoke-app/       # CLI smoke consumer
@@ -30,7 +31,8 @@ tyohncn/
 ```
 
 Publish dry-run: `pnpm publish:packages:dry` (packs `tyohncn`, `@tyohn/registry`, `@tyohn/studio`).  
-Studio binds to a consumer project via `TYOHN_PROJECT_ROOT` (set by `tyohncn studio`).
+Studio binds to a consumer project via `TYOHN_PROJECT_ROOT` (set by `tyohncn studio`).  
+Design packs: `tyohncn pack add <name|path|owner/repo|npm:@scope/pack>`; sync CSS with `pnpm sync:official-packs`.
 
 ## ssota boundary
 

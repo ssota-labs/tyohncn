@@ -77,8 +77,10 @@ pnpm + Turborepo monorepo에서 구현 중이다. 원칙: **ssota 방식**, shad
 
 - [x] registry 컴포넌트 대량 이식 (60+ ui, `cn-*` hooks)
 - [x] docs / agent skill — `docs/UPSTREAM_SYNC.md`, `skills/tyohncn/SKILL.md`
+- [x] Faraday-style skillization (`npx skills add`, `tyohncn studio`)
+- [x] Community design packs (`tyohncn pack`, `packages/official-packs`)
 - [ ] `npx tyohncn` publish
-- [ ] ssota 첫 소비자 마이그레이션 (`style-ssota`)
+- [ ] ssota 첫 소비자 마이그레이션 (`style-ssota` / `pack add ssota`)
 - [x] upstream sync 플레이북 — `docs/UPSTREAM_SYNC.md`
 
 **Exit:** 외부 CLI 설치 + ssota가 tyohncn style pack 소비.
@@ -91,6 +93,8 @@ pnpm + Turborepo monorepo에서 구현 중이다. 원칙: **ssota 방식**, shad
 - 인라인(style-map) 모드 dual support
 - 자동 upstream merge bot
 - Design token Figma 연동
+- Hosted design-pack marketplace / search index
+- Studio pack authoring + publish
 - 멀티 브랜드 runtime theme packing
 
 ---
@@ -107,3 +111,4 @@ pnpm + Turborepo monorepo에서 구현 중이다. 원칙: **ssota 방식**, shad
 | 2026-07-15 | pnpm + Turborepo, `@tyohn/*` 스코프, 구현 착수 |
 | 2026-07-15 | Next.js 앱은 skills.sh 스킬 기준으로 진행 (ssota ENV-02 미러) |
 | 2026-07-15 | 아이콘 라이브러리 선택 (lucide/tabler/hugeicons/phosphor/remixicon) — shadcn과 동일 |
+| 2026-07-15 | Design packs (Faraday-style): style+theme 매니페스트, official/local/github/npm |
