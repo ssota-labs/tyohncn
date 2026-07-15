@@ -1,0 +1,16 @@
+{
+  "name": "mira-vars",
+  "displayName": "Mira (CSS vars)",
+  "description": "shadcn mira look with --cn-* density tokens for Studio editing. Style-only; keeps the project theme.",
+  "kind": "design",
+  "style": {
+    "file": "style.css",
+    "scopeClass": "style-mira",
+    "mode": "css-vars"
+  },
+  "skill": {
+    "reference": "skill/pack.md",
+    "loadWhen": "the project uses mira-vars or needs Studio-editable density tokens"
+  },
+  "quality": "quality.md"
+}

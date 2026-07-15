@@ -1,0 +1,19 @@
+{
+  "name": "ssota",
+  "displayName": "ssota brand",
+  "description": "First-consumer design pack for ssota — density between mira and vega, with semantic theme tokens.",
+  "kind": "design",
+  "style": {
+    "file": "style.css",
+    "scopeClass": "style-ssota",
+    "mode": "css-vars"
+  },
+  "theme": {
+    "file": "theme.css"
+  },
+  "skill": {
+    "reference": "skill/pack.md",
+    "loadWhen": "the project uses the ssota design pack or ssota brand tokens"
+  },
+  "quality": "quality.md"
+}
