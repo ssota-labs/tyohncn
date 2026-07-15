@@ -12,11 +12,13 @@ type ProjectInfo = {
     style?: string
     iconLibrary?: string
     mode?: string
+    packs?: string[]
     aliases?: Record<string, string>
     css?: { globals?: string; stylesDir?: string }
   } | null
   components: string[]
   styles: string[]
+  packs: string[]
   suggestedCli: string[]
   note: string
 }
@@ -45,6 +47,22 @@ async function listStyleNames(dir: string): Promise<string[]> {
   }
 }
 
+async function readInstalledPacks(root: string): Promise<string[]> {
+  try {
+    const raw = await fs.readFile(
+      path.join(root, ".tyohn", "provenance.json"),
+      "utf8"
+    )
+    const data = JSON.parse(raw) as { packs?: Array<{ name?: string }> }
+    return (data.packs ?? [])
+      .map((p) => p.name)
+      .filter((n): n is string => typeof n === "string")
+      .sort()
+  } catch {
+    return []
+  }
+}
+
 export async function GET() {
   const root = process.env.TYOHN_PROJECT_ROOT
     ? path.resolve(process.env.TYOHN_PROJECT_ROOT)
@@ -57,9 +75,11 @@ export async function GET() {
       config: null,
       components: [],
       styles: [],
+      packs: [],
       suggestedCli: [
         "tyohncn init --style mira --icon lucide",
         "tyohncn add button input card",
+        "tyohncn pack add ssota",
         "tyohncn studio",
       ],
       note: "Demo mode — set TYOHN_PROJECT_ROOT or run `tyohncn studio` from a project.",
@@ -79,6 +99,7 @@ export async function GET() {
   const stylesRel = config?.css?.stylesDir ?? "styles"
   const components = await listTsxNames(path.join(root, uiRel))
   const styles = await listStyleNames(path.join(root, stylesRel))
+  const packs = await readInstalledPacks(root)
 
   const style = config?.style ?? "mira"
   const icon = config?.iconLibrary ?? "lucide"
@@ -89,14 +110,16 @@ export async function GET() {
     config,
     components,
     styles,
+    packs,
     suggestedCli: [
+      packs.includes("ssota")
+        ? "tyohncn pack add mira-vars"
+        : "tyohncn pack add ssota",
       `tyohncn apply --style ${style === "mira" ? "vega" : "mira"}`,
       `tyohncn apply --icon ${icon === "lucide" ? "tabler" : "lucide"}`,
-      `tyohncn add dialog`,
-      "tyohncn list styles",
+      "tyohncn pack new my-brand --mode css-vars",
     ],
-    note: "Preview only — confirm style/icon changes with tyohncn apply (no write-back from Studio yet).",
+    note: "Preview only — confirm style/icon/pack changes with tyohncn apply or pack add (no write-back from Studio yet).",
   }
-
   return NextResponse.json(body)
 }

@@ -64,9 +64,11 @@ type ProjectInfo = {
     style?: string
     iconLibrary?: string
     mode?: string
+    packs?: string[]
   } | null
   components: string[]
   styles: string[]
+  packs: string[]
   suggestedCli: string[]
   note: string
 }
@@ -308,6 +310,7 @@ export function StudioShell() {
             config: null,
             components: [],
             styles: [],
+            packs: [],
             suggestedCli: [],
             note: "Could not load project info.",
           })
@@ -698,6 +701,16 @@ function ProjectMetaPanel({ project }: { project: ProjectInfo | null }) {
             </p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
               {project.components.join(", ")}
+            </p>
+          </div>
+        ) : null}
+        {project.packs.length > 0 ? (
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Design packs ({project.packs.length})
+            </p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              {project.packs.join(", ")}
             </p>
           </div>
         ) : null}
