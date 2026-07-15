@@ -7,14 +7,16 @@
     "tyohncn": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "packs"
   ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup src/index.ts --format esm --watch --out-dir dist",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "prepack": "pnpm build"
+    "bundle:packs": "node ./scripts/bundle-packs.mjs",
+    "prepack": "pnpm bundle:packs && pnpm build"
   },
   "dependencies": {
     "@tyohn/registry": "workspace:*",

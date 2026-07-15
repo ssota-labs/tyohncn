@@ -21,6 +21,8 @@ export type TyohnConfig = {
     globals: string
     stylesDir: string
   }
+  /** Installed design pack names (from `tyohncn pack add`). */
+  packs?: string[]
   tailwind: boolean
   rsc: boolean
 }
