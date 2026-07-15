@@ -80,11 +80,19 @@ const styleFiles = fs
   .filter((f) => f.startsWith("style-") && f.endsWith(".css"))
   .map((file) => {
     const name = file.replace(/^style-/, "").replace(/\.css$/, "")
+    // CSS files for *-vars packs still scope under .style-<base> (e.g. mira-vars → .style-mira)
+    const scopeBase = name.endsWith("-vars") ? name.replace(/-vars$/, "") : name
+    const usesCssVars =
+      name.endsWith("-vars") ||
+      name === "ssota" ||
+      fs
+        .readFileSync(path.join(stylesDir, file), "utf8")
+        .includes("--cn-button-height")
     return {
       name,
       file: `styles/${file}`,
-      scopeClass: `style-${name}`,
-      mode: name.endsWith("-vars") ? "css-vars" : "apply",
+      scopeClass: `style-${scopeBase}`,
+      mode: usesCssVars ? "css-vars" : "apply",
     }
   })
   .sort((a, b) => a.name.localeCompare(b.name))

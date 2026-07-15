@@ -7,7 +7,7 @@ tyohncn generalizes patterns first proven in **ssota**. This doc defines what li
 | | **tyohncn** (infra) | **ssota** (consumer) |
 |---|---------------------|----------------------|
 | Owns | CLI, `@tyohn/registry`, style packs, Studio | Product UI, brand, Design Lab experience |
-| Ships | `npx tyohncn`, mira/vega/nova + vars packs | App routes, business logic, brand tokens |
+| Ships | `npx tyohncn`, all shadcn style packs + vars/`style-ssota` | App routes, business logic, brand tokens |
 | Pattern source | Generalizes ssota 3-layer model | Origin of Theme / Style / Component split |
 
 **Rule:** Do not vendor ssota product code into tyohncn. ssota installs components and styles via the CLI like any external consumer.
@@ -30,7 +30,7 @@ ssota's `globals.css` + `style-ssota.css` + `cn-*` CVA pattern is the reference 
 - Mode: `css-vars` (see `manifest/styles.json`)
 - Intended for ssota apps using `tyohncn apply --style ssota` or `init --style ssota`
 
-Other consumers should default to `mira`, `vega`, or `nova` unless they intentionally adopt ssota branding.
+Other consumers should default to a shadcn pack (`mira` … `sera`) unless they intentionally adopt ssota branding.
 
 ### Consumer wiring (ssota app)
 

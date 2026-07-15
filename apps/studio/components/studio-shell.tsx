@@ -24,7 +24,28 @@ import { Input } from "@/components/ui/input"
 import { StylePackLink, type StylePackId } from "@/components/style-pack-link"
 import { cn } from "@/lib/utils"
 
-type PresetId = "mira" | "vega" | "mira-vars" | "vega-vars" | "ssota"
+type PresetId =
+  | "luma"
+  | "lyra"
+  | "maia"
+  | "mira"
+  | "mira-vars"
+  | "nova"
+  | "rhea"
+  | "sera"
+  | "ssota"
+  | "vega"
+  | "vega-vars"
+type ScopeClass =
+  | "style-luma"
+  | "style-lyra"
+  | "style-maia"
+  | "style-mira"
+  | "style-nova"
+  | "style-rhea"
+  | "style-sera"
+  | "style-ssota"
+  | "style-vega"
 type VariableMap = Record<string, string>
 type VariableStyles = React.CSSProperties & Record<string, string>
 
@@ -124,7 +145,7 @@ const presets: Record<
   PresetId,
   {
     label: string
-    scopeClass: "style-mira" | "style-vega" | "style-ssota"
+    scopeClass: ScopeClass
     stylePackId: StylePackId
     description: string
     styleDefaults: VariableMap
@@ -135,15 +156,63 @@ const presets: Record<
     label: "mira",
     scopeClass: "style-mira",
     stylePackId: "style-mira",
-    description: "Compact preset for dense product surfaces.",
+    description: "Most compact (h-7). Dense product surfaces.",
     styleDefaults: miraDefaults,
+    editableStyle: false,
+  },
+  lyra: {
+    label: "lyra",
+    scopeClass: "style-lyra",
+    stylePackId: "style-lyra",
+    description: "Compact-medium density (h-8).",
+    styleDefaults: miraDefaults,
+    editableStyle: false,
+  },
+  nova: {
+    label: "nova",
+    scopeClass: "style-nova",
+    stylePackId: "style-nova",
+    description: "Balanced medium density (h-8).",
+    styleDefaults: miraDefaults,
+    editableStyle: false,
+  },
+  rhea: {
+    label: "rhea",
+    scopeClass: "style-rhea",
+    stylePackId: "style-rhea",
+    description: "Medium density with rhea chrome (h-8).",
+    styleDefaults: miraDefaults,
+    editableStyle: false,
+  },
+  luma: {
+    label: "luma",
+    scopeClass: "style-luma",
+    stylePackId: "style-luma",
+    description: "Roomier default size (h-9).",
+    styleDefaults: vegaDefaults,
+    editableStyle: false,
+  },
+  maia: {
+    label: "maia",
+    scopeClass: "style-maia",
+    stylePackId: "style-maia",
+    description: "Roomier with maia treatment (h-9).",
+    styleDefaults: vegaDefaults,
     editableStyle: false,
   },
   vega: {
     label: "vega",
     scopeClass: "style-vega",
     stylePackId: "style-vega",
-    description: "Roomier preset with larger controls.",
+    description: "Roomier preset with larger controls (h-9).",
+    styleDefaults: vegaDefaults,
+    editableStyle: false,
+  },
+  sera: {
+    label: "sera",
+    scopeClass: "style-sera",
+    stylePackId: "style-sera",
+    description: "Largest density (h-10).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
   },

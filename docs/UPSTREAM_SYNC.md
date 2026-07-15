@@ -13,7 +13,7 @@ Manual, agent-driven sync from [shadcn-ui/ui](https://github.com/shadcn-ui/ui) i
 
 - Upstream ships a component you need in tyohncn consumers.
 - Security or accessibility fix in upstream Base UI registry item.
-- New style preset upstream (mira/vega/nova) — merge into our scoped CSS files.
+- New style preset upstream (mira/lyra/nova/rhea/luma/maia/vega/sera) — copy into `packages/registry/styles/`.
 
 Skip sync when upstream changes only inline `transformStyleMap` behavior; tyohncn intentionally does not use that path.
 
