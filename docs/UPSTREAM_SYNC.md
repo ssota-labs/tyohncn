@@ -9,6 +9,9 @@ Manual, agent-driven sync from [shadcn-ui/ui](https://github.com/shadcn-ui/ui) i
 3. Keep style treatment in `packages/registry/styles/style-*.css`.
 4. Regenerate manifests and verify CLI `add` / `apply` smoke.
 
+> **Greenfield (not upstream):** scaffold with `tyohncn component new` first, then
+> flesh out primitives. See [COMPONENT_AUTHORING.md](./COMPONENT_AUTHORING.md).
+
 ## When to sync
 
 - Upstream ships a component you need in tyohncn consumers.

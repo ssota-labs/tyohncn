@@ -94,6 +94,7 @@ Smoke consumer: `examples/smoke-app/`
 - [ROADMAP.md](./ROADMAP.md) — Phase 0–4
 - [docs/MONOREPO.md](./docs/MONOREPO.md) — 패키지 레이아웃, skills.sh
 - [docs/SKILL.md](./docs/SKILL.md) — Faraday-style skillization
+- [docs/COMPONENT_AUTHORING.md](./docs/COMPONENT_AUTHORING.md) — cn-* component scaffold
 - [docs/THEME_VS_STYLE.md](./docs/THEME_VS_STYLE.md) — theme vs style 토큰
 - [docs/SSOTA.md](./docs/SSOTA.md) — ssota 소비자 경계
 - [docs/UPSTREAM_SYNC.md](./docs/UPSTREAM_SYNC.md) — upstream 수동 동기화 플레이북

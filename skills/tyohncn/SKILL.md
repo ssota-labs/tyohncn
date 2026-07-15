@@ -4,10 +4,10 @@ description: >
   Help set up and manage tyohncn — an external-style shadcn/ui fork where
   components keep cn-* CVA hooks and visual treatment lives in CSS style packs.
   Use when someone wants tyohncn, external style, mira/vega presets, cn-* hooks,
-  design packs, pack add/author, component studio, or to init/add/apply Base UI
-  components without inlining Tailwind into TSX. Triggers on "tyohncn",
-  "external style", "cn-*", "mira/vega", "style pack", "design pack",
-  "component studio".
+  design packs, pack add/author, new component with style tokens, component
+  studio, or to init/add/apply Base UI components without inlining Tailwind into
+  TSX. Triggers on "tyohncn", "external style", "cn-*", "mira/vega",
+  "style pack", "design pack", "component new", "component studio".
 ---
 
 # tyohncn — external-style component system
@@ -55,11 +55,13 @@ pnpm cli:build && pnpm --filter tyohncn exec node dist/index.js <args>
 | `apply --style` | CSS-only swap; accepts builtin **or** pack source |
 | `apply --icon` | Re-resolve icons from registry into installed TSX |
 | `pack list\|add\|remove\|show\|validate\|new` | Design packs (manifest style+theme) |
+| `component new\|check` | Scaffold/lint cn-* + style-token separated components |
 | `list components\|styles\|icons` | Registry catalog |
 | `studio` | Open Studio bound to cwd (`TYOHN_PROJECT_ROOT`) |
 
 See [references/cli.md](references/cli.md), [references/studio.md](references/studio.md),
-[references/packs.md](references/packs.md), and [references/authoring-packs.md](references/authoring-packs.md).
+[references/packs.md](references/packs.md), [references/authoring-packs.md](references/authoring-packs.md),
+and [references/authoring-components.md](references/authoring-components.md).
 
 ## Style & icon presets
 
@@ -81,6 +83,7 @@ Icons: `lucide` `tabler` `hugeicons` `phosphor` `remixicon`
 4. Wrap the app root with the style scope class (e.g. `className="style-mira"`).
 5. Do not invent Radix dual-base or inline style-map mode.
 6. When asked to create a brand look for others to install, scaffold with `tyohncn pack new`.
+7. When asked to create a **new UI component**, use `tyohncn component new` (not hand-inlined density). Run `component check`.
 
 ## Install this skill
 
@@ -98,4 +101,10 @@ Design pack prompt:
 
 ```text
 ssota 디자인 팩 설치하고, 우리 브랜드용 팩도 pack new로 스캐폴드해줘
+```
+
+New component prompt:
+
+```text
+callout 컴포넌트를 cn-* + css-vars 스타일 토큰 분리로 새로 만들어줘
 ```
