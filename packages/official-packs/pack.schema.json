@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tyohn.cn/schemas/design-pack.json",
+  "title": "tyohncn design pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["displayName", "kind", "style"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Pack id (folder name used if omitted)"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "const": "design"
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "scopeClass", "mode"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Path relative to pack root (e.g. style.css)"
+        },
+        "scopeClass": {
+          "type": "string",
+          "pattern": "^style-[a-z0-9][a-z0-9-]*$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["apply", "css-vars"]
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Path relative to pack root (e.g. theme.css)"
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference"],
+      "properties": {
+        "reference": {
+          "type": "string",
+          "description": "File or directory with agent knowledge"
+        },
+        "entry": {
+          "type": "string",
+          "description": "Front-door file when reference is a directory"
+        },
+        "loadWhen": {
+          "type": "string"
+        }
+      }
+    },
+    "quality": {
+      "type": "string"
+    },
+    "requires": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

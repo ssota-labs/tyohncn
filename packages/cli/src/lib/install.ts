@@ -119,7 +119,7 @@ ${theme}
   return globalsPath
 }
 
-async function patchGlobalsForStyle(
+export async function patchGlobalsForStyle(
   root: string,
   config: TyohnConfig,
   styleName: string,
@@ -148,6 +148,46 @@ async function patchGlobalsForStyle(
     )
   } else {
     css = `@import "${importPath}";\n${css}`
+  }
+
+  await fs.writeFile(globalsPath, css)
+}
+
+/** Ensure a pack theme CSS is imported in globals (idempotent swap of theme-*.css). */
+export async function patchGlobalsForPackTheme(
+  root: string,
+  config: TyohnConfig,
+  packName: string
+) {
+  const globalsPath = path.join(root, config.css.globals)
+  if (!(await fs.pathExists(globalsPath))) return
+
+  let css = await fs.readFile(globalsPath, "utf8")
+  const globalsDir = path.dirname(globalsPath)
+  const themeAbs = path.join(root, config.css.stylesDir, `theme-${packName}.css`)
+  const relTheme = path
+    .relative(globalsDir, themeAbs)
+    .replaceAll("\\", "/")
+  const importPath = relTheme.startsWith(".") ? relTheme : `./${relTheme}`
+  const importLine = `@import "${importPath}";`
+
+  const themeImportRe =
+    /@import\s+["']([^"']*theme-[^"']+\.css)["']\s*;/g
+  if (themeImportRe.test(css)) {
+    css = css.replace(themeImportRe, importLine)
+  } else if (css.includes(`style-${packName}.css`)) {
+    // Place theme import after the style import for this pack
+    css = css.replace(
+      new RegExp(`(@import\\s+["'][^"']*style-${packName}\\.css["']\\s*;)`),
+      `$1\n${importLine}`
+    )
+  } else if (css.includes('@import "tailwindcss"')) {
+    css = css.replace(
+      '@import "tailwindcss";',
+      `@import "tailwindcss";\n${importLine}`
+    )
+  } else {
+    css = `${importLine}\n${css}`
   }
 
   await fs.writeFile(globalsPath, css)

@@ -12,6 +12,7 @@ dist
 coverage
 *.log
 .release
+packages/cli/packs
 
 # Generated / local
 examples/smoke-app/node_modules

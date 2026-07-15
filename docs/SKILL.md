@@ -17,8 +17,8 @@ in sync with `pnpm sync:skills`.
 
 | Package | Role |
 |---------|------|
-| `tyohncn` | CLI (`init` / `add` / `apply` / `list` / `studio`) |
-| `@tyohn/registry` | Base UI sources + style packs + theme |
+| `tyohncn` | CLI (`init` / `add` / `apply` / `list` / `studio` / `pack`) |
+| `@tyohn/registry` | Base UI sources + builtin style packs + theme |
 | `@tyohn/studio` | Local Studio web UI |
 
 Publish (maintainers):
@@ -27,6 +27,21 @@ Publish (maintainers):
 pnpm publish:packages:dry
 pnpm publish:packages
 ```
+
+## Design packs
+
+Faraday-style **design packs** (`pack.json` + style/theme CSS) live under
+[`packages/official-packs`](../packages/official-packs). Anyone can author and
+distribute a pack; consumers install with:
+
+```bash
+tyohncn pack add ssota
+tyohncn pack add ./my-brand-pack
+tyohncn pack add owner/repo
+tyohncn pack add npm:@scope/pack
+```
+
+See skill refs: `references/packs.md`, `references/authoring-packs.md`.
 
 ## Studio binding
 

@@ -24,6 +24,18 @@ Run: npx skills add ssota-labs/tyohncn
 에이전트가 `npx tyohncn@latest`로 init/add 후 `tyohncn studio`로 카탈로그를 연다.  
 자세한 흐름: [docs/SKILL.md](./docs/SKILL.md).
 
+**디자인 팩 (커뮤니티 style+theme)**
+
+```bash
+tyohncn pack add ssota
+tyohncn pack add ./my-brand-pack
+tyohncn pack new acme --mode css-vars
+```
+
+```text
+ssota 디자인 팩 설치하고, 우리 브랜드용 팩도 pack new로 스캐폴드해줘
+```
+
 > 방향은 [VISION.md](./VISION.md), 단계 계획은 [ROADMAP.md](./ROADMAP.md)를 본다.
 
 ## Why
@@ -55,11 +67,12 @@ ssota에서 검증한 3층을 제품화한다.
 - shadcn registry·CLI 포크 (Base UI 기본)
 - Style external이 기본인 CLI (`init` / `add` / `apply` / `studio`)
 - Faraday-style agent skill (`npx skills add ssota-labs/tyohncn`)
+- Design packs (`tyohncn pack`) — manifest style+theme, official / local / GitHub / npm
 - 웹 스튜디오: 카탈로그 + theme/style 토큰 편집 + export
 
 **Isn't (yet)**
 
-- Hosted cloud Studio / 웹 write-back
+- Hosted marketplace / cloud Studio write-back
 - shadcn 인라인 모드와의 완전 호환 레이어 (필요 시 옵션으로 검토)
 
 ## Monorepo quick start

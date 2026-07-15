@@ -14,12 +14,17 @@ import {
   isIconLibraryName,
 } from "../lib/icon-libraries.js"
 import { collectIconPackages } from "../lib/transform-icons.js"
+import { addPackToProject } from "./pack.js"
+import { isBuiltinStyleName, isPackSource, listOfficialPacks } from "../lib/pack.js"
 
 export const applyCommand = new Command("apply")
   .description(
     "Apply a style pack (CSS only) and/or re-resolve icons into component TSX"
   )
-  .option("-s, --style <preset>", "Style preset (mira, vega, mira-vars, …)")
+  .option(
+    "-s, --style <preset>",
+    "Builtin style, official pack, local path, owner/repo, or npm:@scope/pack"
+  )
   .option(
     "-i, --icon <library>",
     `Icon library (${ICON_LIBRARY_NAMES.join(" | ")})`
@@ -43,9 +48,28 @@ export const applyCommand = new Command("apply")
       const uiDir = path.join(root, config.aliases.ui.replace(/^@\//, ""))
       const before = await snapshotTsx(uiDir)
 
-      const { dest, scopeClass } = await installStyle(root, config, opts.style)
-      config.style = opts.style
-      await writeConfig(root, config)
+      // Official packs + external sources use pack install; other builtins use registry.
+      const isOfficial = listOfficialPacks().some((p) => p.name === opts.style)
+      const preferPack =
+        isPackSource(opts.style) &&
+        (isOfficial || !(await isBuiltinStyleName(opts.style)))
+
+      let dest: string
+      let scopeClass: string
+      let styleName: string = opts.style
+
+      if (preferPack) {
+        const installed = await addPackToProject(root, config, opts.style)
+        dest = installed.styleDest
+        scopeClass = installed.scopeClass
+        styleName = installed.name
+      } else {
+        const installed = await installStyle(root, config, opts.style)
+        dest = installed.dest
+        scopeClass = installed.scopeClass
+        config.style = opts.style
+        await writeConfig(root, config)
+      }
 
       const after = await snapshotTsx(uiDir)
       const touched = [...before.keys()].filter(
@@ -57,7 +81,7 @@ export const applyCommand = new Command("apply")
         "Style CSS →",
         kleur.cyan(path.relative(root, dest))
       )
-      console.log(kleur.green("✔"), "Active style:", kleur.cyan(opts.style))
+      console.log(kleur.green("✔"), "Active style:", kleur.cyan(styleName))
       console.log(
         kleur.dim(`Use root class "${scopeClass}" (file defines that scope).`)
       )
