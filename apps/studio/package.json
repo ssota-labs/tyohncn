@@ -1,14 +1,30 @@
 {
   "name": "@tyohn/studio",
   "version": "0.1.0",
-  "private": true,
+  "description": "tyohncn Studio — catalog, theme/style inspectors, CSS export",
   "type": "module",
+  "bin": {
+    "tyohn-studio": "./bin/tyohn-studio.mjs"
+  },
+  "files": [
+    "app",
+    "bin",
+    "components",
+    "lib",
+    "public",
+    "next.config.ts",
+    "postcss.config.mjs",
+    "tsconfig.json",
+    ".next/standalone",
+    ".next/static"
+  ],
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
-    "start": "next start --port 3001",
+    "start": "node ./bin/tyohn-studio.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "echo \"lint: noop\""
+    "lint": "echo \"lint: noop\"",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -24,15 +40,26 @@
     "next": "^16.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwind-merge": "^3.3.0"
+    "tailwind-merge": "^3.3.0",
+    "@tailwindcss/postcss": "^4.1.8",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.8",
     "@types/node": "^22.15.30",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
-    "postcss": "^8.5.4",
-    "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssota-labs/tyohncn.git",
+    "directory": "apps/studio"
   }
 }

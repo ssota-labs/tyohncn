@@ -10,7 +10,9 @@
     "dev:studio": "pnpm --filter @tyohn/studio dev",
     "dev:docs": "pnpm --filter @tyohn/docs dev",
     "registry:build": "pnpm --filter @tyohn/registry build",
-    "cli:build": "pnpm --filter tyohncn build"
+    "cli:build": "pnpm --filter tyohncn build",
+    "publish:packages": "node scripts/publish-packages.mjs",
+    "publish:packages:dry": "node scripts/publish-packages.mjs --dry-run"
   },
   "devDependencies": {
     "turbo": "^2.5.4",

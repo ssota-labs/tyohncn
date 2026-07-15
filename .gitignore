@@ -11,6 +11,7 @@ dist
 !.env.example
 coverage
 *.log
+.release
 
 # Generated / local
 examples/smoke-app/node_modules
