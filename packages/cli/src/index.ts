@@ -5,6 +5,7 @@ import { applyCommand } from "./commands/apply.js"
 import { listCommand } from "./commands/list.js"
 import { studioCommand } from "./commands/studio.js"
 import { packCommand } from "./commands/pack.js"
+import { componentCommand } from "./commands/component.js"
 
 const program = new Command()
 
@@ -21,5 +22,6 @@ program.addCommand(applyCommand)
 program.addCommand(listCommand)
 program.addCommand(studioCommand)
 program.addCommand(packCommand)
+program.addCommand(componentCommand)
 
 program.parse()
