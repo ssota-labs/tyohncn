@@ -41,6 +41,17 @@ npx tyohncn@latest pack remove acme
 
 See [packs.md](./packs.md) and [authoring-packs.md](./authoring-packs.md).
 
+## component
+
+```bash
+npx tyohncn@latest component new callout --mode css-vars --styles mira-vars,ssota
+npx tyohncn@latest component new callout --into . --base div
+npx tyohncn@latest component check callout
+npx tyohncn@latest component check ./components/ui/callout.tsx
+```
+
+Scaffolds `cn-*` CVA TSX + style CSS stubs. See [authoring-components.md](./authoring-components.md).
+
 ## list
 
 ```bash

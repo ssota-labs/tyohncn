@@ -79,6 +79,7 @@ pnpm + Turborepo monorepo에서 구현 중이다. 원칙: **ssota 방식**, shad
 - [x] docs / agent skill — `docs/UPSTREAM_SYNC.md`, `skills/tyohncn/SKILL.md`
 - [x] Faraday-style skillization (`npx skills add`, `tyohncn studio`)
 - [x] Community design packs (`tyohncn pack`, `packages/official-packs`)
+- [x] Component authoring with style-token separation (`tyohncn component new|check`)
 - [ ] `npx tyohncn` publish
 - [ ] ssota 첫 소비자 마이그레이션 (`style-ssota` / `pack add ssota`)
 - [x] upstream sync 플레이북 — `docs/UPSTREAM_SYNC.md`
@@ -112,3 +113,4 @@ pnpm + Turborepo monorepo에서 구현 중이다. 원칙: **ssota 방식**, shad
 | 2026-07-15 | Next.js 앱은 skills.sh 스킬 기준으로 진행 (ssota ENV-02 미러) |
 | 2026-07-15 | 아이콘 라이브러리 선택 (lucide/tabler/hugeicons/phosphor/remixicon) — shadcn과 동일 |
 | 2026-07-15 | Design packs (Faraday-style): style+theme 매니페스트, official/local/github/npm |
+| 2026-07-15 | `tyohncn component new\|check` — cn-* + style CSS stub authoring |
