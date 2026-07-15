@@ -30,6 +30,10 @@ Style answers: “how dense / rounded / chrome-y is the button?”
 
 Studio reads the same manifests so inspectors stay aligned with shipped CSS.
 
+## Studio preview scope
+
+shadcn `create` isolates the catalog in an **iframe** and puts `style-${preset}` on the iframe `body`. tyohncn Studio keeps a **page-level** `.style-*` wrapper around the catalog and swaps compiled style packs in the main document so Theme/Style inspectors can apply live `style={{ --primary, --cn-* }}` overrides without a reload. Consumer apps still wrap with `className="style-mira"` (same contract as CLI/skills).
+
 ## Migration (@apply → vars)
 
 1. Keep `@apply` packs working.

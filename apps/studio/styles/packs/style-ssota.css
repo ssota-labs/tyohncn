@@ -1,0 +1,147 @@
+/**
+ * Brand preset for ssota (first consumer).
+ * Density sits between mira and vega; semantic brand colors stay in the app theme.
+ */
+.style-ssota {
+  --cn-button-height: 2rem;
+  --cn-button-height-xs: 1.5rem;
+  --cn-button-height-sm: 1.75rem;
+  --cn-button-height-lg: 2.5rem;
+  --cn-button-padding-x: 0.875rem;
+  --cn-button-padding-x-xs: 0.5rem;
+  --cn-button-padding-x-sm: 0.75rem;
+  --cn-button-padding-x-lg: 1.25rem;
+  --cn-button-radius: calc(var(--radius) * 0.9);
+  --cn-button-font-size: 0.8125rem;
+  --cn-button-line-height: 1.4;
+  --cn-button-ring-width: 2px;
+  --cn-button-icon-size: 1rem;
+
+  --cn-input-height: 2rem;
+  --cn-input-padding-x: 0.75rem;
+  --cn-input-radius: calc(var(--radius) * 0.9);
+  --cn-input-font-size: 0.875rem;
+  --cn-input-ring-width: 2px;
+
+  --cn-card-radius: calc(var(--radius) * 1.2);
+  --cn-card-spacing: 1.25rem;
+  --cn-card-spacing-sm: 0.875rem;
+  --cn-card-font-size: 0.8125rem;
+  --cn-card-title-size: 0.9375rem;
+
+  .cn-button {
+    height: var(--cn-button-height);
+    padding-inline: var(--cn-button-padding-x);
+    border-radius: var(--cn-button-radius);
+    font-size: var(--cn-button-font-size);
+    line-height: var(--cn-button-line-height);
+    @apply focus-visible:border-ring focus-visible:ring-ring/40 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border border-transparent bg-clip-padding font-medium focus-visible:ring-(length:--cn-button-ring-width) active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-(--cn-button-icon-size);
+  }
+
+  .cn-button-variant-default {
+    @apply bg-primary text-primary-foreground hover:bg-primary/85;
+  }
+
+  .cn-button-variant-outline {
+    @apply border-border bg-background hover:bg-muted hover:text-foreground;
+  }
+
+  .cn-button-variant-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .cn-button-variant-ghost {
+    @apply hover:bg-muted hover:text-foreground;
+  }
+
+  .cn-button-variant-destructive {
+    @apply bg-destructive/10 text-destructive hover:bg-destructive/20;
+  }
+
+  .cn-button-variant-link {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+
+  .cn-button-size-default {
+    height: var(--cn-button-height);
+    padding-inline: var(--cn-button-padding-x);
+  }
+
+  .cn-button-size-xs {
+    height: var(--cn-button-height-xs);
+    padding-inline: var(--cn-button-padding-x-xs);
+    @apply gap-1 text-xs [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .cn-button-size-sm {
+    height: var(--cn-button-height-sm);
+    padding-inline: var(--cn-button-padding-x-sm);
+    @apply gap-1.5 text-xs;
+  }
+
+  .cn-button-size-lg {
+    height: var(--cn-button-height-lg);
+    padding-inline: var(--cn-button-padding-x-lg);
+    @apply gap-1.5 text-sm;
+  }
+
+  .cn-button-size-icon {
+    width: var(--cn-button-height);
+    height: var(--cn-button-height);
+    @apply p-0;
+  }
+
+  .cn-button-size-icon-xs {
+    width: var(--cn-button-height-xs);
+    height: var(--cn-button-height-xs);
+    @apply p-0;
+  }
+
+  .cn-button-size-icon-sm {
+    width: var(--cn-button-height-sm);
+    height: var(--cn-button-height-sm);
+    @apply p-0;
+  }
+
+  .cn-button-size-icon-lg {
+    width: var(--cn-button-height-lg);
+    height: var(--cn-button-height-lg);
+    @apply p-0;
+  }
+
+  .cn-input {
+    height: var(--cn-input-height);
+    padding-inline: var(--cn-input-padding-x);
+    border-radius: var(--cn-input-radius);
+    font-size: var(--cn-input-font-size);
+    @apply border-input bg-input/15 dark:bg-input/25 focus-visible:border-ring focus-visible:ring-ring/40 aria-invalid:border-destructive border transition-colors focus-visible:ring-(length:--cn-input-ring-width);
+  }
+
+  .cn-card {
+    --card-spacing: var(--cn-card-spacing);
+    border-radius: var(--cn-card-radius);
+    font-size: var(--cn-card-font-size);
+    @apply bg-card text-card-foreground ring-foreground/10 gap-(--card-spacing) overflow-hidden py-(--card-spacing) ring-1 data-[size=sm]:[--card-spacing:var(--cn-card-spacing-sm)];
+  }
+
+  .cn-card-header {
+    @apply gap-1 px-(--card-spacing);
+  }
+
+  .cn-card-title {
+    font-size: var(--cn-card-title-size);
+    @apply font-medium;
+  }
+
+  .cn-card-description {
+    @apply text-muted-foreground text-sm;
+  }
+
+  .cn-card-content {
+    @apply px-(--card-spacing);
+  }
+
+  .cn-card-footer {
+    @apply px-(--card-spacing);
+  }
+}

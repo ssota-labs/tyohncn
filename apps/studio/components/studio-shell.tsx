@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   Check,
+  ChevronDown,
   Copy,
   Eye,
   FolderGit2,
@@ -24,13 +25,26 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { StylePackLink, type StylePackId } from "@/components/style-pack-link"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Catalog } from "@/components/catalog"
 import {
   ICON_LIBRARY_OPTIONS,
   IconLibraryProvider,
+  IconPlaceholder,
   type IconLibraryName,
 } from "@/components/icon-placeholder"
 import { cn } from "@/lib/utils"
+import {
+  classifyToken,
+  cssColorToHex,
+  formatDimension,
+  hexToCssColor,
+  parseDimension,
+} from "@/lib/token-controls"
 
 type PresetId =
   | "luma"
@@ -44,16 +58,19 @@ type PresetId =
   | "ssota"
   | "vega"
   | "vega-vars"
+/** Studio preview scopes. *-vars packs use distinct classes so they coexist in one CSS bundle. */
 type ScopeClass =
   | "style-luma"
   | "style-lyra"
   | "style-maia"
   | "style-mira"
+  | "style-mira-vars"
   | "style-nova"
   | "style-rhea"
   | "style-sera"
   | "style-ssota"
   | "style-vega"
+  | "style-vega-vars"
 type VariableMap = Record<string, string>
 type VariableStyles = React.CSSProperties & Record<string, string>
 
@@ -170,7 +187,6 @@ const presets: Record<
   {
     label: string
     scopeClass: ScopeClass
-    stylePackId: StylePackId
     description: string
     styleDefaults: VariableMap
     editableStyle: boolean
@@ -179,7 +195,6 @@ const presets: Record<
   mira: {
     label: "mira",
     scopeClass: "style-mira",
-    stylePackId: "style-mira",
     description: "Most compact (h-7). Dense product surfaces.",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -187,7 +202,6 @@ const presets: Record<
   lyra: {
     label: "lyra",
     scopeClass: "style-lyra",
-    stylePackId: "style-lyra",
     description: "Compact-medium density (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -195,7 +209,6 @@ const presets: Record<
   nova: {
     label: "nova",
     scopeClass: "style-nova",
-    stylePackId: "style-nova",
     description: "Balanced medium density (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -203,7 +216,6 @@ const presets: Record<
   rhea: {
     label: "rhea",
     scopeClass: "style-rhea",
-    stylePackId: "style-rhea",
     description: "Medium density with rhea chrome (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -211,7 +223,6 @@ const presets: Record<
   luma: {
     label: "luma",
     scopeClass: "style-luma",
-    stylePackId: "style-luma",
     description: "Roomier default size (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -219,7 +230,6 @@ const presets: Record<
   maia: {
     label: "maia",
     scopeClass: "style-maia",
-    stylePackId: "style-maia",
     description: "Roomier with maia treatment (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -227,7 +237,6 @@ const presets: Record<
   vega: {
     label: "vega",
     scopeClass: "style-vega",
-    stylePackId: "style-vega",
     description: "Roomier preset with larger controls (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -235,23 +244,20 @@ const presets: Record<
   sera: {
     label: "sera",
     scopeClass: "style-sera",
-    stylePackId: "style-sera",
     description: "Largest density (h-10).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
   },
   "mira-vars": {
     label: "mira-vars",
-    scopeClass: "style-mira",
-    stylePackId: "style-mira-vars",
+    scopeClass: "style-mira-vars",
     description: "Mira density backed by editable --cn-* variables.",
     styleDefaults: miraDefaults,
     editableStyle: true,
   },
   "vega-vars": {
     label: "vega-vars",
-    scopeClass: "style-vega",
-    stylePackId: "style-vega-vars",
+    scopeClass: "style-vega-vars",
     description: "Vega density backed by editable --cn-* variables.",
     styleDefaults: vegaDefaults,
     editableStyle: true,
@@ -259,23 +265,56 @@ const presets: Record<
   ssota: {
     label: "ssota",
     scopeClass: "style-ssota",
-    stylePackId: "style-ssota",
     description: "First consumer brand preset.",
     styleDefaults: ssotaDefaults,
-    editableStyle: false,
+    editableStyle: true,
   },
 }
 
-const buttonVariants = [
-  "default",
-  "secondary",
-  "outline",
-  "ghost",
-  "destructive",
-  "link",
+const ICON_SAMPLES = [
+  {
+    lucide: "CheckIcon",
+    tabler: "IconCheck",
+    hugeicons: "Tick02Icon",
+    phosphor: "CheckIcon",
+    remixicon: "RiCheckLine",
+  },
+  {
+    lucide: "ChevronDownIcon",
+    tabler: "IconChevronDown",
+    hugeicons: "ArrowDown01Icon",
+    phosphor: "CaretDownIcon",
+    remixicon: "RiArrowDownSLine",
+  },
+  {
+    lucide: "XIcon",
+    tabler: "IconX",
+    hugeicons: "Cancel01Icon",
+    phosphor: "XIcon",
+    remixicon: "RiCloseLine",
+  },
+  {
+    lucide: "SearchIcon",
+    tabler: "IconSearch",
+    hugeicons: "Search01Icon",
+    phosphor: "MagnifyingGlassIcon",
+    remixicon: "RiSearchLine",
+  },
+  {
+    lucide: "PlusIcon",
+    tabler: "IconPlus",
+    hugeicons: "Add01Icon",
+    phosphor: "PlusIcon",
+    remixicon: "RiAddLine",
+  },
+  {
+    lucide: "SettingsIcon",
+    tabler: "IconSettings",
+    hugeicons: "Settings01Icon",
+    phosphor: "GearIcon",
+    remixicon: "RiSettings3Line",
+  },
 ] as const
-
-const buttonSizes = ["xs", "sm", "default", "lg"] as const
 
 export function StudioShell() {
   const [presetId, setPresetId] = React.useState<PresetId>("mira-vars")
@@ -288,11 +327,33 @@ export function StudioShell() {
 
   React.useEffect(() => {
     let cancelled = false
-    fetch("/api/project")
-      .then((r) => r.json())
-      .then((data: ProjectInfo) => {
+    const controller = new AbortController()
+    const timeoutId = window.setTimeout(() => controller.abort(), 5000)
+
+    const demoFallback = (): ProjectInfo => ({
+      mode: "demo",
+      root: null,
+      config: null,
+      components: [],
+      styles: [],
+      packs: [],
+      suggestedCli: [],
+      note: "Could not load project info. Showing Studio demo mode.",
+    })
+
+    void fetch("/api/project", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Project request failed (${response.status})`)
+        }
+        return (await response.json()) as ProjectInfo
+      })
+      .then((data) => {
         if (cancelled) return
-        setProject(data)
+        setProject({
+          ...data,
+          packs: data.packs ?? [],
+        })
         const style = data.config?.style
         if (style && style in presets) {
           setPresetId(style as PresetId)
@@ -304,24 +365,34 @@ export function StudioShell() {
       })
       .catch(() => {
         if (!cancelled) {
-          setProject({
-            mode: "demo",
-            root: null,
-            config: null,
-            components: [],
-            styles: [],
-            packs: [],
-            suggestedCli: [],
-            note: "Could not load project info.",
-          })
+          setProject(demoFallback())
         }
       })
+      .finally(() => {
+        window.clearTimeout(timeoutId)
+      })
+
     return () => {
       cancelled = true
+      controller.abort()
+      window.clearTimeout(timeoutId)
     }
   }, [])
 
   const preset = presets[presetId]
+
+  React.useEffect(() => {
+    const root = document.documentElement
+    const previous = Array.from(root.classList).filter((c) =>
+      c.startsWith("style-")
+    )
+    for (const c of previous) root.classList.remove(c)
+    root.classList.add(preset.scopeClass)
+    return () => {
+      root.classList.remove(preset.scopeClass)
+    }
+  }, [preset.scopeClass])
+
   const previewStyle = {
     ...themeOverrides,
     ...(preset.editableStyle ? styleOverrides : {}),
@@ -358,7 +429,6 @@ export function StudioShell() {
   return (
     <IconLibraryProvider library={iconLibrary}>
     <main className="min-h-screen bg-background text-foreground">
-      <StylePackLink packId={preset.stylePackId} />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-6 md:px-8 md:py-8">
         <header className="flex flex-col gap-6 border-b pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
@@ -386,46 +456,65 @@ export function StudioShell() {
             <ProjectMetaPanel project={project} />
 
             <Panel title="Preset switcher" icon={<Palette className="size-4" />}>
-              <label className="grid gap-2 text-sm font-medium">
+              <div className="grid gap-2 text-sm font-medium">
                 Active preset
-                <select
+                <OptionPopover
+                  valueLabel={preset.label}
+                  options={Object.entries(presets).map(([id, item]) => ({
+                    value: id,
+                    label: item.label,
+                  }))}
                   value={presetId}
-                  onChange={(event) => setPresetId(event.target.value as PresetId)}
-                  className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none ring-ring/30 transition focus:ring-2"
-                >
-                  {Object.entries(presets).map(([id, item]) => (
-                    <option key={id} value={id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  onChange={(value) => setPresetId(value as PresetId)}
+                />
+              </div>
               <p className="text-sm leading-6 text-muted-foreground">
                 {preset.description}
-              </p>
-              <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
-                Preview only. Confirm with{" "}
-                <code className="text-[0.7rem]">tyohncn apply --style {presetId}</code>
               </p>
             </Panel>
 
             <Panel title="Icon library" icon={<Eye className="size-4" />}>
-              <label className="grid gap-2 text-sm font-medium">
+              <div className="grid gap-2 text-sm font-medium">
                 Active icons
-                <select
-                  value={iconLibrary}
-                  onChange={(event) =>
-                    setIconLibrary(event.target.value as IconLibraryName)
+                <OptionPopover
+                  valueLabel={
+                    ICON_LIBRARY_OPTIONS.find((item) => item.id === iconLibrary)
+                      ?.label ?? iconLibrary
                   }
-                  className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none ring-ring/30 transition focus:ring-2"
-                >
-                  {ICON_LIBRARY_OPTIONS.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  options={ICON_LIBRARY_OPTIONS.map((item) => ({
+                    value: item.id,
+                    label: item.label,
+                  }))}
+                  value={iconLibrary}
+                  onChange={(value) =>
+                    setIconLibrary(value as IconLibraryName)
+                  }
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background/60 px-3 py-2.5">
+                {ICON_SAMPLES.map((sample) => (
+                  <div
+                    key={sample.lucide}
+                    className="flex flex-col items-center gap-1 text-muted-foreground"
+                    title={sample.lucide}
+                  >
+                    <IconPlaceholder
+                      lucide={sample.lucide}
+                      tabler={sample.tabler}
+                      hugeicons={sample.hugeicons}
+                      phosphor={sample.phosphor}
+                      remixicon={sample.remixicon}
+                      className="size-4"
+                    />
+                    <span className="text-[10px] leading-none">
+                      {sample.lucide.replace(/Icon$/, "")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] leading-4 text-muted-foreground">
+                Preview · CLI resolves IconPlaceholder on add/apply
+              </p>
               <p className="text-sm leading-6 text-muted-foreground">
                 Same libraries as shadcn: Lucide, Tabler, HugeIcons, Phosphor,
                 Remix. CLI bakes the choice at{" "}
@@ -532,113 +621,6 @@ export function StudioShell() {
   )
 }
 
-function Catalog() {
-  return (
-    <div className="grid gap-6">
-      <section className="grid gap-4">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">
-            Component catalog
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Button, input, and card from @tyohn/registry via tsconfig paths.
-          </p>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Button variants</CardTitle>
-            <CardDescription>
-              CVA variants remain cn-* hooks; the scope supplies the look.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="flex flex-wrap gap-2">
-              {buttonVariants.map((variant) => (
-                <Button key={variant} variant={variant}>
-                  {variant}
-                </Button>
-              ))}
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {buttonSizes.map((size) => (
-                <Button key={size} size={size} variant="outline">
-                  {size}
-                </Button>
-              ))}
-              <Button size="icon" aria-label="Confirm">
-                <Check data-icon="inline-start" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Input</CardTitle>
-            <CardDescription>Height, padding, font, and radius hooks.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3">
-            <Input placeholder="Placeholder text" />
-            <Input defaultValue="hello@tyohn.dev" type="email" />
-            <Input aria-invalid placeholder="Invalid state" />
-            <label className="flex items-center gap-2 text-sm">
-              <Checkbox defaultChecked />
-              Checkbox uses IconPlaceholder (switches with icon library)
-            </label>
-          </CardContent>
-          <CardFooter className="justify-between border-t">
-            <span className="text-sm text-muted-foreground">
-              Uses @base-ui/react input
-            </span>
-            <Button size="sm">Save</Button>
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Card density</CardTitle>
-            <CardDescription>
-              Spacing and title scale change with the active style.
-            </CardDescription>
-            <CardAction>
-              <Button size="sm" variant="secondary">
-                Action
-              </Button>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm leading-6 text-muted-foreground">
-              The preview root receives semantic variables and, for vars presets,
-              --cn-* overrides. Component source stays stable.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card size="sm" className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>Small card</CardTitle>
-            <CardDescription>
-              The registry card exposes a size data attribute for compact layouts.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              <Button size="xs" variant="outline">
-                Inspect
-              </Button>
-              <Button size="xs" variant="ghost">
-                Export
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-    </div>
-  )
-}
 
 function ProjectMetaPanel({ project }: { project: ProjectInfo | null }) {
   const [copiedCmd, setCopiedCmd] = React.useState<string | null>(null)
@@ -770,6 +752,62 @@ function Panel({
   )
 }
 
+/** Studio chrome picker — registry Popover (not Select/combobox). */
+function OptionPopover({
+  value,
+  valueLabel,
+  options,
+  onChange,
+}: {
+  value: string
+  valueLabel: string
+  options: Array<{ value: string; label: string }>
+  onChange: (value: string) => void
+}) {
+  const [open, setOpen] = React.useState(false)
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        type="button"
+        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm font-normal outline-none transition focus-visible:ring-2 focus-visible:ring-ring/30"
+      >
+        <span className="truncate">{valueLabel}</span>
+        <ChevronDown className="size-4 shrink-0 opacity-50" aria-hidden />
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        sideOffset={4}
+        className="w-[var(--anchor-width)] gap-0 border border-border bg-popover p-1 text-popover-foreground shadow-md"
+      >
+        <div className="max-h-64 overflow-y-auto" role="listbox">
+          {options.map((option) => {
+            const selected = option.value === value
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                className={cn(
+                  "flex w-full items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                  selected && "bg-accent text-accent-foreground"
+                )}
+                onClick={() => {
+                  onChange(option.value)
+                  setOpen(false)
+                }}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
 function TokenGrid({
   tokens,
   defaults,
@@ -785,24 +823,142 @@ function TokenGrid({
 }) {
   return (
     <div className="grid gap-3">
-      {tokens.map(([token, label]) => (
-        <label key={token} className="grid gap-1.5 text-xs font-medium">
-          <span className="flex items-center justify-between gap-3">
-            {label}
-            <code className="text-[0.6875rem] font-normal text-muted-foreground">
-              {token}
-            </code>
-          </span>
-          <Input
-            value={overrides[token] ?? defaults[token] ?? ""}
+      {tokens.map(([token, label]) => {
+        const value = overrides[token] ?? defaults[token] ?? ""
+        return (
+          <TokenControl
+            key={token}
+            token={token}
+            label={label}
+            value={value}
             disabled={disabled}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              onChange(token, event.target.value)
-            }
+            onChange={(next) => onChange(token, next)}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+function TokenControl({
+  token,
+  label,
+  value,
+  disabled,
+  onChange,
+}: {
+  token: string
+  label: string
+  value: string
+  disabled: boolean
+  onChange: (value: string) => void
+}) {
+  const kind = classifyToken(token, value)
+  const isComplexDimension =
+    kind === "dimension" && /var\(|calc\(/i.test(value)
+
+  return (
+    <div className="grid gap-1.5 text-xs font-medium">
+      <span className="flex items-center justify-between gap-3">
+        {label}
+        <code className="text-[0.6875rem] font-normal text-muted-foreground">
+          {token}
+        </code>
+      </span>
+      {kind === "color" && !disabled ? (
+        <ColorTokenControl
+          label={label}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+        />
+      ) : kind === "dimension" && !disabled && !isComplexDimension ? (
+        <div className="flex items-center gap-2">
+          <Input
+            type="number"
+            step="any"
+            value={parseDimension(value).amount}
+            disabled={disabled}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              const unit = parseDimension(value).unit
+              onChange(formatDimension(event.target.value, unit))
+            }}
             className="font-mono text-xs"
           />
-        </label>
-      ))}
+          <select
+            value={parseDimension(value).unit}
+            disabled={disabled}
+            onChange={(event) => {
+              const amount = parseDimension(value).amount
+              onChange(formatDimension(amount, event.target.value))
+            }}
+            className="h-9 rounded-md border border-input bg-background px-2 font-mono text-xs outline-none"
+          >
+            <option value="px">px</option>
+            <option value="rem">rem</option>
+            <option value="em">em</option>
+            <option value="%">%</option>
+          </select>
+        </div>
+      ) : (
+        <Input
+          value={value}
+          disabled={disabled}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            onChange(event.target.value)
+          }
+          className="font-mono text-xs"
+        />
+      )}
+    </div>
+  )
+}
+
+function ColorTokenControl({
+  label,
+  value,
+  disabled,
+  onChange,
+}: {
+  label: string
+  value: string
+  disabled: boolean
+  onChange: (value: string) => void
+}) {
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const hex = cssColorToHex(value)
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        disabled={disabled}
+        aria-label={`${label} color`}
+        title={`${label} color`}
+        className="size-9 shrink-0 rounded-md border border-border shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ background: value }}
+        onClick={() => inputRef.current?.click()}
+      />
+      <input
+        ref={inputRef}
+        type="color"
+        tabIndex={-1}
+        aria-hidden
+        value={hex}
+        disabled={disabled}
+        onChange={(event) =>
+          onChange(hexToCssColor(event.target.value, value))
+        }
+        className="pointer-events-none absolute size-0 opacity-0"
+      />
+      <Input
+        value={value}
+        disabled={disabled}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onChange(event.target.value)
+        }
+        className="font-mono text-xs"
+      />
     </div>
   )
 }
@@ -816,7 +972,7 @@ function ResetButton({
 }) {
   return (
     <Button size="xs" variant="ghost" type="button" onClick={onClick}>
-      <RotateCcw data-icon="inline-start" />
+      <RotateCcw data-icon="inline-start" className="size-3" />
       {children}
     </Button>
   )

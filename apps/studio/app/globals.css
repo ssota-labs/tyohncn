@@ -1,9 +1,19 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 @import "@tyohn/registry/theme.css";
+@import "../styles/packs.css";
 
 @source "../app/**/*.{ts,tsx}";
 @source "../components/**/*.{ts,tsx}";
 @source "../../../packages/registry/ui/**/*.{ts,tsx}";
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 :root {
   color-scheme: light;
