@@ -30,6 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Catalog } from "@/components/catalog"
 import {
   ICON_LIBRARY_OPTIONS,
   IconLibraryProvider,
@@ -315,17 +316,6 @@ const ICON_SAMPLES = [
   },
 ] as const
 
-const buttonVariants = [
-  "default",
-  "secondary",
-  "outline",
-  "ghost",
-  "destructive",
-  "link",
-] as const
-
-const buttonSizes = ["xs", "sm", "default", "lg"] as const
-
 export function StudioShell() {
   const [presetId, setPresetId] = React.useState<PresetId>("mira-vars")
   const [iconLibrary, setIconLibrary] =
@@ -390,6 +380,19 @@ export function StudioShell() {
   }, [])
 
   const preset = presets[presetId]
+
+  React.useEffect(() => {
+    const root = document.documentElement
+    const previous = Array.from(root.classList).filter((c) =>
+      c.startsWith("style-")
+    )
+    for (const c of previous) root.classList.remove(c)
+    root.classList.add(preset.scopeClass)
+    return () => {
+      root.classList.remove(preset.scopeClass)
+    }
+  }, [preset.scopeClass])
+
   const previewStyle = {
     ...themeOverrides,
     ...(preset.editableStyle ? styleOverrides : {}),
@@ -618,113 +621,6 @@ export function StudioShell() {
   )
 }
 
-function Catalog() {
-  return (
-    <div className="grid gap-6">
-      <section className="grid gap-4">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">
-            Component catalog
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Button, input, and card from @tyohn/registry via tsconfig paths.
-          </p>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Button variants</CardTitle>
-            <CardDescription>
-              CVA variants remain cn-* hooks; the scope supplies the look.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="flex flex-wrap gap-2">
-              {buttonVariants.map((variant) => (
-                <Button key={variant} variant={variant}>
-                  {variant}
-                </Button>
-              ))}
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {buttonSizes.map((size) => (
-                <Button key={size} size={size} variant="outline">
-                  {size}
-                </Button>
-              ))}
-              <Button size="icon" aria-label="Confirm">
-                <Check data-icon="inline-start" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Input</CardTitle>
-            <CardDescription>Height, padding, font, and radius hooks.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3">
-            <Input placeholder="Placeholder text" />
-            <Input defaultValue="hello@tyohn.dev" type="email" />
-            <Input aria-invalid placeholder="Invalid state" />
-            <label className="flex items-center gap-2 text-sm">
-              <Checkbox defaultChecked />
-              Checkbox uses IconPlaceholder (switches with icon library)
-            </label>
-          </CardContent>
-          <CardFooter className="justify-between border-t">
-            <span className="text-sm text-muted-foreground">
-              Uses @base-ui/react input
-            </span>
-            <Button size="sm">Save</Button>
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Card density</CardTitle>
-            <CardDescription>
-              Spacing and title scale change with the active style.
-            </CardDescription>
-            <CardAction>
-              <Button size="sm" variant="secondary">
-                Action
-              </Button>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm leading-6 text-muted-foreground">
-              The preview root receives semantic variables and, for vars presets,
-              --cn-* overrides. Component source stays stable.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card size="sm" className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>Small card</CardTitle>
-            <CardDescription>
-              The registry card exposes a size data attribute for compact layouts.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              <Button size="xs" variant="outline">
-                Inspect
-              </Button>
-              <Button size="xs" variant="ghost">
-                Export
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-    </div>
-  )
-}
 
 function ProjectMetaPanel({ project }: { project: ProjectInfo | null }) {
   const [copiedCmd, setCopiedCmd] = React.useState<string | null>(null)
