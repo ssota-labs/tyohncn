@@ -16,7 +16,7 @@ Binds to the consumer project via `TYOHN_PROJECT_ROOT`.
 - Component catalog (button / input / card / …)
 - Theme inspector (semantic CSS vars; color picker + text)
 - Style inspector (`--cn-*` on `*-vars` packs; dimension controls)
-- Preset + icon library switchers (**preview only**; registry Select popup)
+- Preset + icon library switchers (**preview only**; registry Popover)
 - Icon sample row via `IconPlaceholder`
 - Project meta: installed components, suggested CLI commands
 - CSS export of token overrides

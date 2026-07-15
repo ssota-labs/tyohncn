@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   Check,
+  ChevronDown,
   Copy,
   Eye,
   FolderGit2,
@@ -25,12 +26,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   ICON_LIBRARY_OPTIONS,
   IconLibraryProvider,
@@ -469,25 +468,15 @@ export function StudioShell() {
             <Panel title="Preset switcher" icon={<Palette className="size-4" />}>
               <div className="grid gap-2 text-sm font-medium">
                 Active preset
-                <Select
+                <OptionPopover
+                  valueLabel={preset.label}
+                  options={Object.entries(presets).map(([id, item]) => ({
+                    value: id,
+                    label: item.label,
+                  }))}
                   value={presetId}
-                  onValueChange={(value) => {
-                    if (value != null) {
-                      setPresetId(value as PresetId)
-                    }
-                  }}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select preset" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(presets).map(([id, item]) => (
-                      <SelectItem key={id} value={id}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(value) => setPresetId(value as PresetId)}
+                />
               </div>
               <p className="text-sm leading-6 text-muted-foreground">
                 {preset.description}
@@ -503,25 +492,20 @@ export function StudioShell() {
             <Panel title="Icon library" icon={<Eye className="size-4" />}>
               <div className="grid gap-2 text-sm font-medium">
                 Active icons
-                <Select
+                <OptionPopover
+                  valueLabel={
+                    ICON_LIBRARY_OPTIONS.find((item) => item.id === iconLibrary)
+                      ?.label ?? iconLibrary
+                  }
+                  options={ICON_LIBRARY_OPTIONS.map((item) => ({
+                    value: item.id,
+                    label: item.label,
+                  }))}
                   value={iconLibrary}
-                  onValueChange={(value) => {
-                    if (value != null) {
-                      setIconLibrary(value as IconLibraryName)
-                    }
-                  }}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select icon library" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ICON_LIBRARY_OPTIONS.map((item) => (
-                      <SelectItem key={item.id} value={item.id}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(value) =>
+                    setIconLibrary(value as IconLibraryName)
+                  }
+                />
               </div>
               <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background/60 px-3 py-2.5">
                 {ICON_SAMPLES.map((sample) => (
@@ -888,6 +872,62 @@ function Panel({
       </div>
       <div className="grid gap-3">{children}</div>
     </section>
+  )
+}
+
+/** Studio chrome picker — registry Popover (not Select/combobox). */
+function OptionPopover({
+  value,
+  valueLabel,
+  options,
+  onChange,
+}: {
+  value: string
+  valueLabel: string
+  options: Array<{ value: string; label: string }>
+  onChange: (value: string) => void
+}) {
+  const [open, setOpen] = React.useState(false)
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        type="button"
+        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm font-normal outline-none transition focus-visible:ring-2 focus-visible:ring-ring/30"
+      >
+        <span className="truncate">{valueLabel}</span>
+        <ChevronDown className="size-4 shrink-0 opacity-50" aria-hidden />
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        sideOffset={4}
+        className="w-[var(--anchor-width)] gap-0 border border-border bg-popover p-1 text-popover-foreground shadow-md"
+      >
+        <div className="max-h-64 overflow-y-auto" role="listbox">
+          {options.map((option) => {
+            const selected = option.value === value
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                className={cn(
+                  "flex w-full items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                  selected && "bg-accent text-accent-foreground"
+                )}
+                onClick={() => {
+                  onChange(option.value)
+                  setOpen(false)
+                }}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }
 
