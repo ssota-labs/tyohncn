@@ -1,7 +1,5 @@
 "use client"
 
-import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react"
-
 import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 
@@ -13,6 +11,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 const Combobox = ComboboxPrimitive.Root
 
@@ -32,7 +31,12 @@ function ComboboxTrigger({
       {...props}
     >
       {children}
-      <ChevronDownIcon
+      <IconPlaceholder
+        lucide="ChevronDownIcon"
+        tabler="IconChevronDown"
+        hugeicons="ArrowDown01Icon"
+        phosphor="CaretDownIcon"
+        remixicon="RiArrowDownSLine"
         className="cn-combobox-trigger-icon pointer-events-none"
       />
     </ComboboxPrimitive.Trigger>
@@ -47,7 +51,12 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
       className={cn("cn-combobox-clear", className)}
       {...props}
     >
-      <XIcon
+      <IconPlaceholder
+        lucide="XIcon"
+        tabler="IconX"
+        hugeicons="Cancel01Icon"
+        phosphor="XIcon"
+        remixicon="RiCloseLine"
         className="cn-combobox-clear-icon pointer-events-none"
       />
     </ComboboxPrimitive.Clear>
@@ -157,7 +166,12 @@ function ComboboxItem({
       <ComboboxPrimitive.ItemIndicator
         render={<span className="cn-combobox-item-indicator" />}
       >
-        <CheckIcon
+        <IconPlaceholder
+          lucide="CheckIcon"
+          tabler="IconCheck"
+          hugeicons="Tick02Icon"
+          phosphor="CheckIcon"
+          remixicon="RiCheckLine"
           className="cn-combobox-item-indicator-icon pointer-events-none"
         />
       </ComboboxPrimitive.ItemIndicator>
@@ -255,7 +269,12 @@ function ComboboxChip({
           className="cn-combobox-chip-remove"
           data-slot="combobox-chip-remove"
         >
-          <XIcon
+          <IconPlaceholder
+            lucide="XIcon"
+            tabler="IconX"
+            hugeicons="Cancel01Icon"
+            phosphor="XIcon"
+            remixicon="RiCloseLine"
             className="cn-combobox-chip-indicator-icon pointer-events-none"
           />
         </ComboboxPrimitive.ChipRemove>

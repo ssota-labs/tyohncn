@@ -28,14 +28,16 @@ describe("tyohncn external mode", () => {
       private: true,
     })
 
-    run(["init", "--style", "mira", "--css", "app/globals.css"], tmp)
+    run(["init", "--style", "mira", "--icon", "lucide", "--css", "app/globals.css"], tmp)
     expect(await fs.pathExists(path.join(tmp, "tyohncn.json"))).toBe(true)
+    const cfg = await fs.readJson(path.join(tmp, "tyohncn.json"))
+    expect(cfg.iconLibrary).toBe("lucide")
     expect(await fs.pathExists(path.join(tmp, "styles/style-mira.css"))).toBe(
       true
     )
     expect(await fs.pathExists(path.join(tmp, "app/globals.css"))).toBe(true)
 
-    run(["add", "button", "input", "card"], tmp)
+    run(["add", "button", "input", "card", "dialog"], tmp)
     const button = await fs.readFile(
       path.join(tmp, "components/ui/button.tsx"),
       "utf8"
@@ -44,6 +46,24 @@ describe("tyohncn external mode", () => {
     expect(button).toContain("cn-button-size-default")
     // Must NOT be inlined to bg-primary etc. as sole replacement of cn-*
     expect(button).toMatch(/cn-button/)
+
+    const dialog = await fs.readFile(
+      path.join(tmp, "components/ui/dialog.tsx"),
+      "utf8"
+    )
+    expect(dialog).toContain('from "lucide-react"')
+    expect(dialog).toContain("XIcon")
+    expect(dialog).not.toContain("IconPlaceholder")
+
+    // Switch icon library by re-resolving from registry
+    run(["apply", "--icon", "tabler"], tmp)
+    const dialogTabler = await fs.readFile(
+      path.join(tmp, "components/ui/dialog.tsx"),
+      "utf8"
+    )
+    expect(dialogTabler).toContain("@tabler/icons-react")
+    expect(dialogTabler).toContain("IconX")
+    expect(dialogTabler).not.toContain("IconPlaceholder")
 
     const beforeMtime = (
       await fs.stat(path.join(tmp, "components/ui/button.tsx"))

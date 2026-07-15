@@ -54,6 +54,21 @@ importers:
       '@base-ui/react':
         specifier: ^1.5.0
         version: 1.6.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@hugeicons/core-free-icons':
+        specifier: ^1.0.0
+        version: 1.2.1
+      '@hugeicons/react':
+        specifier: ^1.0.0
+        version: 1.1.9(react@19.2.7)
+      '@phosphor-icons/react':
+        specifier: ^2.1.10
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@remixicon/react':
+        specifier: ^4.6.0
+        version: 4.9.0(react@19.2.7)
+      '@tabler/icons-react':
+        specifier: ^3.34.0
+        version: 3.44.0(react@19.2.7)
       '@tyohn/registry':
         specifier: workspace:*
         version: link:../../packages/registry
@@ -145,9 +160,24 @@ importers:
       '@base-ui/react':
         specifier: ^1.0.0
         version: 1.6.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@hugeicons/core-free-icons':
+        specifier: '>=1.0.0'
+        version: 1.2.1
+      '@hugeicons/react':
+        specifier: '>=1.0.0'
+        version: 1.1.9(react@19.2.7)
+      '@phosphor-icons/react':
+        specifier: '>=2.0.0'
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@remixicon/react':
+        specifier: '>=4.0.0'
+        version: 4.9.0(react@19.2.7)
       '@shadcn/react':
         specifier: '>=0.0.0'
         version: 0.2.1(@types/react@19.2.17)(react@19.2.7)
+      '@tabler/icons-react':
+        specifier: '>=3.0.0'
+        version: 3.44.0(react@19.2.7)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -541,6 +571,14 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
+  '@hugeicons/core-free-icons@1.2.1':
+    resolution: {integrity: sha512-ho0QdGMkgL+kt+QsZocCsKvJou1rfyVQWARrxIhNLi+9tCKayUUtD9jlHgioaRphmskSl84TxrDm9Ae0G4Uu1g==}
+
+  '@hugeicons/react@1.1.9':
+    resolution: {integrity: sha512-O+lWSWjbijoAvMCxn4K2bQWCGN5+mP1y5j+X99j23mXMj+s0X25fs71T6t9YJLaBodwmZdaewD27dzS/PiboQw==}
+    peerDependencies:
+      react: '>=16.0.0'
+
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
     engines: {node: '>=18'}
@@ -745,6 +783,18 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@phosphor-icons/react@2.1.10':
+    resolution: {integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>= 16.8'
+      react-dom: '>= 16.8'
+
+  '@remixicon/react@4.9.0':
+    resolution: {integrity: sha512-5/jLDD4DtKxH2B4QVXTobvV1C2uL8ab9D5yAYNtFt+w80O0Ys1xFOrspqROL3fjrZi+7ElFUWE37hBfaAl6U+Q==}
+    peerDependencies:
+      react: '>=18.2.0'
+
   '@rollup/rollup-android-arm-eabi@4.62.2':
     resolution: {integrity: sha512-6o7ZLZK+BeenkZCFNDXqpbjw9bD6nuWonvS/lwQJp7NoVVxm6p3qE7qQ5jGuBjiFsgvqjD8mZAU5oWxTmbOeOg==}
     cpu: [arm]
@@ -883,6 +933,14 @@ packages:
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+
+  '@tabler/icons-react@3.44.0':
+    resolution: {integrity: sha512-8+rvzBbVm/1Z3sG3x7GUNAaxIKxwgz8xaMhRs23nrCnMTKRFAhEC+82zAIFeAA0seXdrAGX5HFCkaLpGK2rVHg==}
+    peerDependencies:
+      react: '>= 16'
+
+  '@tabler/icons@3.44.0':
+    resolution: {integrity: sha512-Wn0AOZG9sg0L+bjfMqq4eNhC6pQjIrk94LvvWYNYkY8KH8wC3YILRzQlrnVJc4FUeMxH/AK97QsYCX35H3LndA==}
 
   '@tailwindcss/node@4.3.2':
     resolution: {integrity: sha512-yWP/sqEcBLaD8JuA6zNwxoYKr75qxTioYwlRwekj5Jr/I5GXnoJfjetH/psLUIv74cYTH2lBUEzBkinthoYcBg==}
@@ -1859,6 +1917,12 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
+  '@hugeicons/core-free-icons@1.2.1': {}
+
+  '@hugeicons/react@1.1.9(react@19.2.7)':
+    dependencies:
+      react: 19.2.7
+
   '@img/colour@1.1.0':
     optional: true
 
@@ -2001,6 +2065,15 @@ snapshots:
   '@next/swc-win32-x64-msvc@16.2.10':
     optional: true
 
+  '@phosphor-icons/react@2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
+  '@remixicon/react@4.9.0(react@19.2.7)':
+    dependencies:
+      react: 19.2.7
+
   '@rollup/rollup-android-arm-eabi@4.62.2':
     optional: true
 
@@ -2084,6 +2157,13 @@ snapshots:
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+
+  '@tabler/icons-react@3.44.0(react@19.2.7)':
+    dependencies:
+      '@tabler/icons': 3.44.0
+      react: 19.2.7
+
+  '@tabler/icons@3.44.0': {}
 
   '@tailwindcss/node@4.3.2':
     dependencies:

@@ -1,10 +1,11 @@
 import { Command } from "commander"
 import kleur from "kleur"
 import { loadComponentsManifest, loadStylesManifest } from "../lib/project.js"
+import { iconLibraries, ICON_LIBRARY_NAMES } from "../lib/icon-libraries.js"
 
 export const listCommand = new Command("list")
-  .description("List available components or styles")
-  .argument("<kind>", "components | styles")
+  .description("List available components, styles, or icon libraries")
+  .argument("<kind>", "components | styles | icons")
   .action(async (kind: string) => {
     if (kind === "components" || kind === "component") {
       const manifest = await loadComponentsManifest()
@@ -24,6 +25,15 @@ export const listCommand = new Command("list")
       }
       return
     }
-    console.error('Expected "components" or "styles"')
+    if (kind === "icons" || kind === "icon") {
+      for (const name of ICON_LIBRARY_NAMES) {
+        const lib = iconLibraries[name]
+        console.log(
+          `${kleur.cyan(name.padEnd(12))} ${kleur.dim(lib.title.padEnd(16))} ${lib.packages.join(", ")}`
+        )
+      }
+      return
+    }
+    console.error('Expected "components", "styles", or "icons"')
     process.exit(1)
   })

@@ -1,7 +1,5 @@
 "use client"
 
-import { CheckIcon } from "lucide-react"
-
 import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { Menubar as MenubarPrimitive } from "@base-ui/react/menubar"
@@ -22,6 +20,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 function Menubar({ className, ...props }: MenubarPrimitive.Props) {
   return (
@@ -126,7 +125,13 @@ function MenubarCheckboxItem({
     >
       <span className="cn-menubar-checkbox-item-indicator pointer-events-none absolute flex items-center justify-center">
         <MenuPrimitive.CheckboxItemIndicator>
-          <CheckIcon />
+          <IconPlaceholder
+            lucide="CheckIcon"
+            tabler="IconCheck"
+            hugeicons="Tick02Icon"
+            phosphor="CheckIcon"
+            remixicon="RiCheckLine"
+          />
         </MenuPrimitive.CheckboxItemIndicator>
       </span>
       {children}
@@ -160,7 +165,13 @@ function MenubarRadioItem({
     >
       <span className="cn-menubar-radio-item-indicator pointer-events-none absolute flex items-center justify-center">
         <MenuPrimitive.RadioItemIndicator>
-          <CheckIcon />
+          <IconPlaceholder
+            lucide="CheckIcon"
+            tabler="IconCheck"
+            hugeicons="Tick02Icon"
+            phosphor="CheckIcon"
+            remixicon="RiCheckLine"
+          />
         </MenuPrimitive.RadioItemIndicator>
       </span>
       {children}

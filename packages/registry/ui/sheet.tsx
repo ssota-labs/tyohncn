@@ -1,12 +1,11 @@
 "use client"
 
-import { XIcon } from "lucide-react"
-
 import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { IconPlaceholder } from "@/components/icon-placeholder"
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
@@ -71,7 +70,13 @@ function SheetContent({
               />
             }
           >
-            <XIcon />
+            <IconPlaceholder
+              lucide="XIcon"
+              tabler="IconX"
+              hugeicons="Cancel01Icon"
+              phosphor="XIcon"
+              remixicon="RiCloseLine"
+            />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
         )}
