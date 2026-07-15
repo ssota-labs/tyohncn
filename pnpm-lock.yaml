@@ -69,6 +69,9 @@ importers:
       '@tabler/icons-react':
         specifier: ^3.34.0
         version: 3.44.0(react@19.2.7)
+      '@tailwindcss/postcss':
+        specifier: ^4.1.8
+        version: 4.3.2
       '@tyohn/registry':
         specifier: workspace:*
         version: link:../../packages/registry
@@ -84,6 +87,9 @@ importers:
       next:
         specifier: ^16.0.0
         version: 16.2.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      postcss:
+        specifier: ^8.5.4
+        version: 8.5.19
       react:
         specifier: ^19.1.0
         version: 19.2.7
@@ -93,10 +99,10 @@ importers:
       tailwind-merge:
         specifier: ^3.3.0
         version: 3.6.0
-    devDependencies:
-      '@tailwindcss/postcss':
+      tailwindcss:
         specifier: ^4.1.8
         version: 4.3.2
+    devDependencies:
       '@types/node':
         specifier: ^22.15.30
         version: 22.20.1
@@ -106,12 +112,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.5
         version: 19.2.3(@types/react@19.2.17)
-      postcss:
-        specifier: ^8.5.4
-        version: 8.5.19
-      tailwindcss:
-        specifier: ^4.1.8
-        version: 4.3.2
       typescript:
         specifier: ^5.8.3
         version: 5.9.3

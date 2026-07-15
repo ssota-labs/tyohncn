@@ -55,5 +55,16 @@
   "devDependencies": {
     "@types/react": "^19.1.0",
     "typescript": "^5.8.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssota-labs/tyohncn.git",
+    "directory": "packages/registry"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

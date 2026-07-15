@@ -16,17 +16,21 @@
 ```text
 tyohncn/
   apps/
-    studio/          # Next.js web catalog (Phase 3)
+    studio/          # Next.js Studio (@tyohn/studio; `tyohncn studio`)
     docs/            # Docs site
   packages/
     cli/             # published as `tyohncn`
     registry/        # Base UI components + styles + theme
+  plugins/           # Faraday-style installable agent skills (skills.sh)
   examples/
     smoke-app/       # CLI smoke consumer
   docs/              # Architecture / playbooks (markdown)
-  .agents/skills/    # skills.sh canonical skills (ssota ENV-02)
+  .agents/skills/    # ssota ENV-02 mirrors (sync via pnpm sync:skills)
   skills-lock.json
 ```
+
+Publish dry-run: `pnpm publish:packages:dry` (packs `tyohncn`, `@tyohn/registry`, `@tyohn/studio`).  
+Studio binds to a consumer project via `TYOHN_PROJECT_ROOT` (set by `tyohncn studio`).
 
 ## ssota boundary
 
