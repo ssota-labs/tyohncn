@@ -481,12 +481,6 @@ export function StudioShell() {
               <p className="text-sm leading-6 text-muted-foreground">
                 {preset.description}
               </p>
-              <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
-                Preview only. Confirm with{" "}
-                <code className="text-[0.7rem]">
-                  tyohncn apply --style {preset.applyId}
-                </code>
-              </p>
             </Panel>
 
             <Panel title="Icon library" icon={<Eye className="size-4" />}>
