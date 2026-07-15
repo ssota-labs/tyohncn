@@ -1,0 +1,39 @@
+{
+  "name": "tyohncn",
+  "version": "0.1.0",
+  "description": "CLI for tyohncn — external-style shadcn fork (cn-* + style CSS)",
+  "type": "module",
+  "bin": {
+    "tyohncn": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup src/index.ts --format esm --watch --out-dir dist",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tyohn/registry": "workspace:*",
+    "commander": "^13.1.0",
+    "fs-extra": "^11.3.0",
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.15.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
