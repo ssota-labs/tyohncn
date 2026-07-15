@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "name": "mira",
+      "file": "styles/style-mira.css",
+      "scopeClass": "style-mira",
+      "mode": "apply"
+    },
+    {
+      "name": "mira-vars",
+      "file": "styles/style-mira-vars.css",
+      "scopeClass": "style-mira-vars",
+      "mode": "css-vars"
+    },
+    {
+      "name": "nova",
+      "file": "styles/style-nova.css",
+      "scopeClass": "style-nova",
+      "mode": "apply"
+    },
+    {
+      "name": "ssota",
+      "file": "styles/style-ssota.css",
+      "scopeClass": "style-ssota",
+      "mode": "apply"
+    },
+    {
+      "name": "vega",
+      "file": "styles/style-vega.css",
+      "scopeClass": "style-vega",
+      "mode": "apply"
+    },
+    {
+      "name": "vega-vars",
+      "file": "styles/style-vega-vars.css",
+      "scopeClass": "style-vega-vars",
+      "mode": "css-vars"
+    }
+  ]
+}
