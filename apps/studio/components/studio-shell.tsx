@@ -858,7 +858,7 @@ function TokenControl({
     kind === "dimension" && /var\(|calc\(/i.test(value)
 
   return (
-    <label className="grid gap-1.5 text-xs font-medium">
+    <div className="grid gap-1.5 text-xs font-medium">
       <span className="flex items-center justify-between gap-3">
         {label}
         <code className="text-[0.6875rem] font-normal text-muted-foreground">
@@ -866,31 +866,12 @@ function TokenControl({
         </code>
       </span>
       {kind === "color" && !disabled ? (
-        <div className="flex items-center gap-2">
-          <input
-            type="color"
-            aria-label={`${label} color`}
-            value={cssColorToHex(value)}
-            disabled={disabled}
-            onChange={(event) =>
-              onChange(hexToCssColor(event.target.value, value))
-            }
-            className="size-9 shrink-0 cursor-pointer rounded-md border border-input bg-transparent p-0.5"
-          />
-          <span
-            className="size-9 shrink-0 rounded-md border border-border"
-            style={{ background: value }}
-            aria-hidden
-          />
-          <Input
-            value={value}
-            disabled={disabled}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              onChange(event.target.value)
-            }
-            className="font-mono text-xs"
-          />
-        </div>
+        <ColorTokenControl
+          label={label}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+        />
       ) : kind === "dimension" && !disabled && !isComplexDimension ? (
         <div className="flex items-center gap-2">
           <Input
@@ -929,7 +910,56 @@ function TokenControl({
           className="font-mono text-xs"
         />
       )}
-    </label>
+    </div>
+  )
+}
+
+function ColorTokenControl({
+  label,
+  value,
+  disabled,
+  onChange,
+}: {
+  label: string
+  value: string
+  disabled: boolean
+  onChange: (value: string) => void
+}) {
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const hex = cssColorToHex(value)
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        disabled={disabled}
+        aria-label={`${label} color`}
+        title={`${label} color`}
+        className="size-9 shrink-0 rounded-md border border-border shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ background: value }}
+        onClick={() => inputRef.current?.click()}
+      />
+      <input
+        ref={inputRef}
+        type="color"
+        tabIndex={-1}
+        aria-hidden
+        value={hex}
+        disabled={disabled}
+        onChange={(event) =>
+          onChange(hexToCssColor(event.target.value, value))
+        }
+        className="pointer-events-none absolute size-0 opacity-0"
+      />
+      <Input
+        value={value}
+        disabled={disabled}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onChange(event.target.value)
+        }
+        className="font-mono text-xs"
+      />
+    </div>
   )
 }
 
