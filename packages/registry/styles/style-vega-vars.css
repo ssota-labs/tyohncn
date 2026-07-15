@@ -1,0 +1,150 @@
+/**
+ * Phase 2 — vega style with CSS custom properties for density/chrome.
+ * Larger density than mira. Fallback: style-vega.css (@apply-only).
+ */
+.style-vega {
+  --cn-button-height: 2.25rem;
+  --cn-button-height-xs: 1.5rem;
+  --cn-button-height-sm: 2rem;
+  --cn-button-height-lg: 2.5rem;
+  --cn-button-padding-x: 1rem;
+  --cn-button-padding-x-xs: 0.5rem;
+  --cn-button-padding-x-sm: 0.75rem;
+  --cn-button-padding-x-lg: 1.5rem;
+  --cn-button-radius: var(--radius-md, 0.5rem);
+  --cn-button-font-size: 0.875rem;
+  --cn-button-line-height: 1.25;
+  --cn-button-ring-width: 3px;
+  --cn-button-icon-size: 1rem;
+
+  --cn-input-height: 2.25rem;
+  --cn-input-padding-x: 0.625rem;
+  --cn-input-radius: var(--radius-md, 0.5rem);
+  --cn-input-font-size: 1rem;
+  --cn-input-ring-width: 3px;
+
+  --cn-card-radius: var(--radius-xl, 0.875rem);
+  --cn-card-spacing: 1.5rem;
+  --cn-card-spacing-sm: 1rem;
+  --cn-card-font-size: 0.875rem;
+  --cn-card-title-size: 1rem;
+
+  /* MARK: Button */
+  .cn-button {
+    height: var(--cn-button-height);
+    padding-inline: var(--cn-button-padding-x);
+    border-radius: var(--cn-button-radius);
+    font-size: var(--cn-button-font-size);
+    line-height: var(--cn-button-line-height);
+    @apply focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding font-medium focus-visible:ring-(length:--cn-button-ring-width) aria-invalid:ring-(length:--cn-button-ring-width) active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-(--cn-button-icon-size);
+  }
+
+  .cn-button-variant-default {
+    @apply bg-primary text-primary-foreground hover:bg-primary/80;
+  }
+
+  .cn-button-variant-outline {
+    @apply border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground shadow-xs;
+  }
+
+  .cn-button-variant-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground;
+  }
+
+  .cn-button-variant-ghost {
+    @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground;
+  }
+
+  .cn-button-variant-destructive {
+    @apply bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  .cn-button-variant-link {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+
+  .cn-button-size-default {
+    height: var(--cn-button-height);
+    padding-inline: var(--cn-button-padding-x);
+  }
+
+  .cn-button-size-xs {
+    height: var(--cn-button-height-xs);
+    padding-inline: var(--cn-button-padding-x-xs);
+    @apply gap-1 rounded-md text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .cn-button-size-sm {
+    height: var(--cn-button-height-sm);
+    padding-inline: var(--cn-button-padding-x-sm);
+    @apply gap-1.5 rounded-md text-sm has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-4;
+  }
+
+  .cn-button-size-lg {
+    height: var(--cn-button-height-lg);
+    padding-inline: var(--cn-button-padding-x-lg);
+    @apply gap-1.5 rounded-md text-sm has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3 [&_svg:not([class*='size-'])]:size-4;
+  }
+
+  .cn-button-size-icon {
+    width: var(--cn-button-height);
+    height: var(--cn-button-height);
+    @apply p-0;
+  }
+
+  .cn-button-size-icon-xs {
+    width: var(--cn-button-height-xs);
+    height: var(--cn-button-height-xs);
+    @apply p-0 [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .cn-button-size-icon-sm {
+    width: var(--cn-button-height-sm);
+    height: var(--cn-button-height-sm);
+    @apply p-0;
+  }
+
+  .cn-button-size-icon-lg {
+    width: var(--cn-button-height-lg);
+    height: var(--cn-button-height-lg);
+    @apply p-0;
+  }
+
+  /* MARK: Input */
+  .cn-input {
+    height: var(--cn-input-height);
+    padding-inline: var(--cn-input-padding-x);
+    border-radius: var(--cn-input-radius);
+    font-size: var(--cn-input-font-size);
+    @apply dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border bg-transparent py-1 shadow-xs transition-[color,box-shadow] file:h-7 file:text-sm file:font-medium focus-visible:ring-(length:--cn-input-ring-width) aria-invalid:ring-(length:--cn-input-ring-width) md:text-sm;
+  }
+
+  /* MARK: Card */
+  .cn-card {
+    --card-spacing: var(--cn-card-spacing);
+    border-radius: var(--cn-card-radius);
+    font-size: var(--cn-card-font-size);
+    @apply ring-foreground/10 bg-card text-card-foreground gap-(--card-spacing) overflow-hidden py-(--card-spacing) shadow-xs ring-1 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:var(--cn-card-spacing-sm)] *:[img:first-child]:rounded-t-[var(--cn-card-radius)] *:[img:last-child]:rounded-b-[var(--cn-card-radius)];
+  }
+
+  .cn-card-header {
+    @apply gap-1 rounded-t-[var(--cn-card-radius)] px-(--card-spacing) [.border-b]:pb-(--card-spacing);
+  }
+
+  .cn-card-title {
+    font-size: var(--cn-card-title-size);
+    @apply leading-normal font-medium group-data-[size=sm]/card:text-sm;
+  }
+
+  .cn-card-description {
+    @apply text-muted-foreground text-sm;
+  }
+
+  .cn-card-content {
+    @apply px-(--card-spacing);
+  }
+
+  .cn-card-footer {
+    @apply rounded-b-[var(--cn-card-radius)] px-(--card-spacing) [.border-t]:pt-(--card-spacing);
+  }
+}

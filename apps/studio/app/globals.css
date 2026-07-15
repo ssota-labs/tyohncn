@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "@tyohn/registry/theme.css";
+
+@source "../app/**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
+@source "../../../packages/registry/ui/**/*.{ts,tsx}";
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-feature-settings:
+    "rlig" 1,
+    "calt" 1;
+}
+
+::selection {
+  background: color-mix(in oklch, var(--primary), transparent 78%);
+}

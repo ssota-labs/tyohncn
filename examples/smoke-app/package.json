@@ -1,0 +1,8 @@
+{
+  "name": "smoke-app",
+  "private": true,
+  "description": "Minimal consumer for tyohncn CLI smoke tests (init / add / apply)",
+  "scripts": {
+    "smoke": "node ../../packages/cli/dist/index.js init --style mira --css app/globals.css && node ../../packages/cli/dist/index.js add button input card"
+  }
+}

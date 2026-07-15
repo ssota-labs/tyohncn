@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/components/ui/*": ["../../packages/registry/ui/*"],
+      "@/hooks/*": ["../../packages/registry/hooks/*"],
+      "@/lib/utils": ["../../packages/registry/lib/utils.ts"],
+      "@/*": ["./*"]
+    },
+    "types": ["node"]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
