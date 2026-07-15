@@ -186,8 +186,6 @@ const presets: Record<
   {
     label: string
     scopeClass: ScopeClass
-    /** Consumer apply id (tyohncn apply --style). */
-    applyId: PresetId
     description: string
     styleDefaults: VariableMap
     editableStyle: boolean
@@ -196,7 +194,6 @@ const presets: Record<
   mira: {
     label: "mira",
     scopeClass: "style-mira",
-    applyId: "mira",
     description: "Most compact (h-7). Dense product surfaces.",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -204,7 +201,6 @@ const presets: Record<
   lyra: {
     label: "lyra",
     scopeClass: "style-lyra",
-    applyId: "lyra",
     description: "Compact-medium density (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -212,7 +208,6 @@ const presets: Record<
   nova: {
     label: "nova",
     scopeClass: "style-nova",
-    applyId: "nova",
     description: "Balanced medium density (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -220,7 +215,6 @@ const presets: Record<
   rhea: {
     label: "rhea",
     scopeClass: "style-rhea",
-    applyId: "rhea",
     description: "Medium density with rhea chrome (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -228,7 +222,6 @@ const presets: Record<
   luma: {
     label: "luma",
     scopeClass: "style-luma",
-    applyId: "luma",
     description: "Roomier default size (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -236,7 +229,6 @@ const presets: Record<
   maia: {
     label: "maia",
     scopeClass: "style-maia",
-    applyId: "maia",
     description: "Roomier with maia treatment (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -244,7 +236,6 @@ const presets: Record<
   vega: {
     label: "vega",
     scopeClass: "style-vega",
-    applyId: "vega",
     description: "Roomier preset with larger controls (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -252,7 +243,6 @@ const presets: Record<
   sera: {
     label: "sera",
     scopeClass: "style-sera",
-    applyId: "sera",
     description: "Largest density (h-10).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -260,7 +250,6 @@ const presets: Record<
   "mira-vars": {
     label: "mira-vars",
     scopeClass: "style-mira-vars",
-    applyId: "mira-vars",
     description: "Mira density backed by editable --cn-* variables.",
     styleDefaults: miraDefaults,
     editableStyle: true,
@@ -268,7 +257,6 @@ const presets: Record<
   "vega-vars": {
     label: "vega-vars",
     scopeClass: "style-vega-vars",
-    applyId: "vega-vars",
     description: "Vega density backed by editable --cn-* variables.",
     styleDefaults: vegaDefaults,
     editableStyle: true,
@@ -276,7 +264,6 @@ const presets: Record<
   ssota: {
     label: "ssota",
     scopeClass: "style-ssota",
-    applyId: "ssota",
     description: "First consumer brand preset.",
     styleDefaults: ssotaDefaults,
     editableStyle: true,
