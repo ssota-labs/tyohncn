@@ -972,7 +972,7 @@ function ResetButton({
 }) {
   return (
     <Button size="xs" variant="ghost" type="button" onClick={onClick}>
-      <RotateCcw data-icon="inline-start" />
+      <RotateCcw data-icon="inline-start" className="size-3" />
       {children}
     </Button>
   )
