@@ -24,13 +24,27 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { StylePackLink, type StylePackId } from "@/components/style-pack-link"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
   ICON_LIBRARY_OPTIONS,
   IconLibraryProvider,
+  IconPlaceholder,
   type IconLibraryName,
 } from "@/components/icon-placeholder"
 import { cn } from "@/lib/utils"
+import {
+  classifyToken,
+  cssColorToHex,
+  formatDimension,
+  hexToCssColor,
+  parseDimension,
+} from "@/lib/token-controls"
 
 type PresetId =
   | "luma"
@@ -44,16 +58,19 @@ type PresetId =
   | "ssota"
   | "vega"
   | "vega-vars"
+/** Studio preview scopes. *-vars packs use distinct classes so they coexist in one CSS bundle. */
 type ScopeClass =
   | "style-luma"
   | "style-lyra"
   | "style-maia"
   | "style-mira"
+  | "style-mira-vars"
   | "style-nova"
   | "style-rhea"
   | "style-sera"
   | "style-ssota"
   | "style-vega"
+  | "style-vega-vars"
 type VariableMap = Record<string, string>
 type VariableStyles = React.CSSProperties & Record<string, string>
 
@@ -170,7 +187,8 @@ const presets: Record<
   {
     label: string
     scopeClass: ScopeClass
-    stylePackId: StylePackId
+    /** Consumer apply id (tyohncn apply --style). */
+    applyId: PresetId
     description: string
     styleDefaults: VariableMap
     editableStyle: boolean
@@ -179,7 +197,7 @@ const presets: Record<
   mira: {
     label: "mira",
     scopeClass: "style-mira",
-    stylePackId: "style-mira",
+    applyId: "mira",
     description: "Most compact (h-7). Dense product surfaces.",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -187,7 +205,7 @@ const presets: Record<
   lyra: {
     label: "lyra",
     scopeClass: "style-lyra",
-    stylePackId: "style-lyra",
+    applyId: "lyra",
     description: "Compact-medium density (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -195,7 +213,7 @@ const presets: Record<
   nova: {
     label: "nova",
     scopeClass: "style-nova",
-    stylePackId: "style-nova",
+    applyId: "nova",
     description: "Balanced medium density (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -203,7 +221,7 @@ const presets: Record<
   rhea: {
     label: "rhea",
     scopeClass: "style-rhea",
-    stylePackId: "style-rhea",
+    applyId: "rhea",
     description: "Medium density with rhea chrome (h-8).",
     styleDefaults: miraDefaults,
     editableStyle: false,
@@ -211,7 +229,7 @@ const presets: Record<
   luma: {
     label: "luma",
     scopeClass: "style-luma",
-    stylePackId: "style-luma",
+    applyId: "luma",
     description: "Roomier default size (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -219,7 +237,7 @@ const presets: Record<
   maia: {
     label: "maia",
     scopeClass: "style-maia",
-    stylePackId: "style-maia",
+    applyId: "maia",
     description: "Roomier with maia treatment (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -227,7 +245,7 @@ const presets: Record<
   vega: {
     label: "vega",
     scopeClass: "style-vega",
-    stylePackId: "style-vega",
+    applyId: "vega",
     description: "Roomier preset with larger controls (h-9).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
@@ -235,23 +253,23 @@ const presets: Record<
   sera: {
     label: "sera",
     scopeClass: "style-sera",
-    stylePackId: "style-sera",
+    applyId: "sera",
     description: "Largest density (h-10).",
     styleDefaults: vegaDefaults,
     editableStyle: false,
   },
   "mira-vars": {
     label: "mira-vars",
-    scopeClass: "style-mira",
-    stylePackId: "style-mira-vars",
+    scopeClass: "style-mira-vars",
+    applyId: "mira-vars",
     description: "Mira density backed by editable --cn-* variables.",
     styleDefaults: miraDefaults,
     editableStyle: true,
   },
   "vega-vars": {
     label: "vega-vars",
-    scopeClass: "style-vega",
-    stylePackId: "style-vega-vars",
+    scopeClass: "style-vega-vars",
+    applyId: "vega-vars",
     description: "Vega density backed by editable --cn-* variables.",
     styleDefaults: vegaDefaults,
     editableStyle: true,
@@ -259,12 +277,57 @@ const presets: Record<
   ssota: {
     label: "ssota",
     scopeClass: "style-ssota",
-    stylePackId: "style-ssota",
+    applyId: "ssota",
     description: "First consumer brand preset.",
     styleDefaults: ssotaDefaults,
-    editableStyle: false,
+    editableStyle: true,
   },
 }
+
+const ICON_SAMPLES = [
+  {
+    lucide: "CheckIcon",
+    tabler: "IconCheck",
+    hugeicons: "Tick02Icon",
+    phosphor: "CheckIcon",
+    remixicon: "RiCheckLine",
+  },
+  {
+    lucide: "ChevronDownIcon",
+    tabler: "IconChevronDown",
+    hugeicons: "ArrowDown01Icon",
+    phosphor: "CaretDownIcon",
+    remixicon: "RiArrowDownSLine",
+  },
+  {
+    lucide: "XIcon",
+    tabler: "IconX",
+    hugeicons: "Cancel01Icon",
+    phosphor: "XIcon",
+    remixicon: "RiCloseLine",
+  },
+  {
+    lucide: "SearchIcon",
+    tabler: "IconSearch",
+    hugeicons: "Search01Icon",
+    phosphor: "MagnifyingGlassIcon",
+    remixicon: "RiSearchLine",
+  },
+  {
+    lucide: "PlusIcon",
+    tabler: "IconPlus",
+    hugeicons: "Add01Icon",
+    phosphor: "PlusIcon",
+    remixicon: "RiAddLine",
+  },
+  {
+    lucide: "SettingsIcon",
+    tabler: "IconSettings",
+    hugeicons: "Settings01Icon",
+    phosphor: "GearIcon",
+    remixicon: "RiSettings3Line",
+  },
+] as const
 
 const buttonVariants = [
   "default",
@@ -288,11 +351,33 @@ export function StudioShell() {
 
   React.useEffect(() => {
     let cancelled = false
-    fetch("/api/project")
-      .then((r) => r.json())
-      .then((data: ProjectInfo) => {
+    const controller = new AbortController()
+    const timeoutId = window.setTimeout(() => controller.abort(), 5000)
+
+    const demoFallback = (): ProjectInfo => ({
+      mode: "demo",
+      root: null,
+      config: null,
+      components: [],
+      styles: [],
+      packs: [],
+      suggestedCli: [],
+      note: "Could not load project info. Showing Studio demo mode.",
+    })
+
+    void fetch("/api/project", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Project request failed (${response.status})`)
+        }
+        return (await response.json()) as ProjectInfo
+      })
+      .then((data) => {
         if (cancelled) return
-        setProject(data)
+        setProject({
+          ...data,
+          packs: data.packs ?? [],
+        })
         const style = data.config?.style
         if (style && style in presets) {
           setPresetId(style as PresetId)
@@ -304,20 +389,17 @@ export function StudioShell() {
       })
       .catch(() => {
         if (!cancelled) {
-          setProject({
-            mode: "demo",
-            root: null,
-            config: null,
-            components: [],
-            styles: [],
-            packs: [],
-            suggestedCli: [],
-            note: "Could not load project info.",
-          })
+          setProject(demoFallback())
         }
       })
+      .finally(() => {
+        window.clearTimeout(timeoutId)
+      })
+
     return () => {
       cancelled = true
+      controller.abort()
+      window.clearTimeout(timeoutId)
     }
   }, [])
 
@@ -358,7 +440,6 @@ export function StudioShell() {
   return (
     <IconLibraryProvider library={iconLibrary}>
     <main className="min-h-screen bg-background text-foreground">
-      <StylePackLink packId={preset.stylePackId} />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-6 md:px-8 md:py-8">
         <header className="flex flex-col gap-6 border-b pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
@@ -386,46 +467,86 @@ export function StudioShell() {
             <ProjectMetaPanel project={project} />
 
             <Panel title="Preset switcher" icon={<Palette className="size-4" />}>
-              <label className="grid gap-2 text-sm font-medium">
+              <div className="grid gap-2 text-sm font-medium">
                 Active preset
-                <select
+                <Select
                   value={presetId}
-                  onChange={(event) => setPresetId(event.target.value as PresetId)}
-                  className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none ring-ring/30 transition focus:ring-2"
+                  onValueChange={(value) => {
+                    if (value != null) {
+                      setPresetId(value as PresetId)
+                    }
+                  }}
                 >
-                  {Object.entries(presets).map(([id, item]) => (
-                    <option key={id} value={id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select preset" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(presets).map(([id, item]) => (
+                      <SelectItem key={id} value={id}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <p className="text-sm leading-6 text-muted-foreground">
                 {preset.description}
               </p>
               <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
                 Preview only. Confirm with{" "}
-                <code className="text-[0.7rem]">tyohncn apply --style {presetId}</code>
+                <code className="text-[0.7rem]">
+                  tyohncn apply --style {preset.applyId}
+                </code>
               </p>
             </Panel>
 
             <Panel title="Icon library" icon={<Eye className="size-4" />}>
-              <label className="grid gap-2 text-sm font-medium">
+              <div className="grid gap-2 text-sm font-medium">
                 Active icons
-                <select
+                <Select
                   value={iconLibrary}
-                  onChange={(event) =>
-                    setIconLibrary(event.target.value as IconLibraryName)
-                  }
-                  className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none ring-ring/30 transition focus:ring-2"
+                  onValueChange={(value) => {
+                    if (value != null) {
+                      setIconLibrary(value as IconLibraryName)
+                    }
+                  }}
                 >
-                  {ICON_LIBRARY_OPTIONS.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select icon library" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ICON_LIBRARY_OPTIONS.map((item) => (
+                      <SelectItem key={item.id} value={item.id}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background/60 px-3 py-2.5">
+                {ICON_SAMPLES.map((sample) => (
+                  <div
+                    key={sample.lucide}
+                    className="flex flex-col items-center gap-1 text-muted-foreground"
+                    title={sample.lucide}
+                  >
+                    <IconPlaceholder
+                      lucide={sample.lucide}
+                      tabler={sample.tabler}
+                      hugeicons={sample.hugeicons}
+                      phosphor={sample.phosphor}
+                      remixicon={sample.remixicon}
+                      className="size-4"
+                    />
+                    <span className="text-[10px] leading-none">
+                      {sample.lucide.replace(/Icon$/, "")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] leading-4 text-muted-foreground">
+                Preview · CLI resolves IconPlaceholder on add/apply
+              </p>
               <p className="text-sm leading-6 text-muted-foreground">
                 Same libraries as shadcn: Lucide, Tabler, HugeIcons, Phosphor,
                 Remix. CLI bakes the choice at{" "}
@@ -785,25 +906,113 @@ function TokenGrid({
 }) {
   return (
     <div className="grid gap-3">
-      {tokens.map(([token, label]) => (
-        <label key={token} className="grid gap-1.5 text-xs font-medium">
-          <span className="flex items-center justify-between gap-3">
-            {label}
-            <code className="text-[0.6875rem] font-normal text-muted-foreground">
-              {token}
-            </code>
-          </span>
+      {tokens.map(([token, label]) => {
+        const value = overrides[token] ?? defaults[token] ?? ""
+        return (
+          <TokenControl
+            key={token}
+            token={token}
+            label={label}
+            value={value}
+            disabled={disabled}
+            onChange={(next) => onChange(token, next)}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+function TokenControl({
+  token,
+  label,
+  value,
+  disabled,
+  onChange,
+}: {
+  token: string
+  label: string
+  value: string
+  disabled: boolean
+  onChange: (value: string) => void
+}) {
+  const kind = classifyToken(token, value)
+  const isComplexDimension =
+    kind === "dimension" && /var\(|calc\(/i.test(value)
+
+  return (
+    <label className="grid gap-1.5 text-xs font-medium">
+      <span className="flex items-center justify-between gap-3">
+        {label}
+        <code className="text-[0.6875rem] font-normal text-muted-foreground">
+          {token}
+        </code>
+      </span>
+      {kind === "color" && !disabled ? (
+        <div className="flex items-center gap-2">
+          <input
+            type="color"
+            aria-label={`${label} color`}
+            value={cssColorToHex(value)}
+            disabled={disabled}
+            onChange={(event) =>
+              onChange(hexToCssColor(event.target.value, value))
+            }
+            className="size-9 shrink-0 cursor-pointer rounded-md border border-input bg-transparent p-0.5"
+          />
+          <span
+            className="size-9 shrink-0 rounded-md border border-border"
+            style={{ background: value }}
+            aria-hidden
+          />
           <Input
-            value={overrides[token] ?? defaults[token] ?? ""}
+            value={value}
             disabled={disabled}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              onChange(token, event.target.value)
+              onChange(event.target.value)
             }
             className="font-mono text-xs"
           />
-        </label>
-      ))}
-    </div>
+        </div>
+      ) : kind === "dimension" && !disabled && !isComplexDimension ? (
+        <div className="flex items-center gap-2">
+          <Input
+            type="number"
+            step="any"
+            value={parseDimension(value).amount}
+            disabled={disabled}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              const unit = parseDimension(value).unit
+              onChange(formatDimension(event.target.value, unit))
+            }}
+            className="font-mono text-xs"
+          />
+          <select
+            value={parseDimension(value).unit}
+            disabled={disabled}
+            onChange={(event) => {
+              const amount = parseDimension(value).amount
+              onChange(formatDimension(amount, event.target.value))
+            }}
+            className="h-9 rounded-md border border-input bg-background px-2 font-mono text-xs outline-none"
+          >
+            <option value="px">px</option>
+            <option value="rem">rem</option>
+            <option value="em">em</option>
+            <option value="%">%</option>
+          </select>
+        </div>
+      ) : (
+        <Input
+          value={value}
+          disabled={disabled}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            onChange(event.target.value)
+          }
+          className="font-mono text-xs"
+        />
+      )}
+    </label>
   )
 }
 
