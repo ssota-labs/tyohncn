@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { PreviewPanel } from "@/components/preview-panel"
+import { PreviewFrame } from "@/components/preview-frame"
 import {
   StudioControls,
   type ProjectInfo,
@@ -13,6 +13,7 @@ import {
   type IconLibraryName,
 } from "@/components/icon-placeholder"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import type { StudioPreviewPayload } from "@/lib/preview-protocol"
 import {
   RADII,
   buildCssExport,
@@ -24,17 +25,9 @@ import {
   type VariableMap,
 } from "@/lib/studio-presets"
 
-type VariableStyles = React.CSSProperties & Record<string, string>
-
 /**
- * Studio shell — intentionally simple.
- *
- * Root causes we hit with the previous tweakcn clone:
- * 1. style-* on <html> restyled the editor chrome itself
- * 2. 1px resizable handle was covered by preview content → dead clicks
- * 3. missing isolation made horizontal scroll feel like clipping
- *
- * So: fixed sidebar, preview-only style scope, no overlapping hit targets.
+ * Studio host shell — controls stay in the parent document.
+ * Preview runs in an iframe (shadcn create pattern) so Portals inherit style-*.
  */
 export function StudioShell() {
   const [presetId, setPresetId] = React.useState<PresetId>("mira-vars")
@@ -109,14 +102,12 @@ export function StudioShell() {
     }
   }, [])
 
-  // Dark mode only on <html>. NEVER put style-* on documentElement —
-  // that leaks density packs into Studio chrome and breaks affordances.
+  // Host chrome: dark mode only. Never put style-* on the host document.
   React.useEffect(() => {
     const root = document.documentElement
-    const previous = Array.from(root.classList).filter((c) =>
-      c.startsWith("style-")
-    )
-    for (const c of previous) root.classList.remove(c)
+    for (const className of Array.from(root.classList)) {
+      if (className.startsWith("style-")) root.classList.remove(className)
+    }
     root.classList.toggle("dark", dark)
     root.style.colorScheme = dark ? "dark" : "light"
     return () => {
@@ -125,20 +116,36 @@ export function StudioShell() {
     }
   }, [dark])
 
+  React.useEffect(() => {
+    document.body.dataset.studioShell = ""
+    return () => {
+      delete document.body.dataset.studioShell
+    }
+  }, [])
+
   const preset = presets[presetId]
   const radiusValue =
     RADII.find((item) => item.name === radius)?.value ??
     themeDefaults["--radius"]
-  const modeDefaults = dark ? themeDarkDefaults : {}
+  const previewStyle = React.useMemo(() => {
+    return {
+      ...(dark ? themeDarkDefaults : {}),
+      ...themeOverrides,
+      "--radius": themeOverrides["--radius"] ?? radiusValue,
+      ...(preset.editableStyle ? styleOverrides : {}),
+    } satisfies VariableMap
+  }, [dark, themeOverrides, radiusValue, preset.editableStyle, styleOverrides])
 
-  // Only inject mode defaults + user overrides into the preview root.
-  // Do not re-declare every light token — let theme.css own the base.
-  const previewStyle = {
-    ...modeDefaults,
-    ...themeOverrides,
-    "--radius": themeOverrides["--radius"] ?? radiusValue,
-    ...(preset.editableStyle ? styleOverrides : {}),
-  } as VariableStyles
+  const previewPayload = React.useMemo<StudioPreviewPayload>(
+    () => ({
+      scopeClass: preset.scopeClass,
+      tab: "cards",
+      dark,
+      previewStyle,
+      iconLibrary,
+    }),
+    [preset.scopeClass, dark, previewStyle, iconLibrary]
+  )
 
   const cssExport = buildCssExport(
     preset.exportScopeClass,
@@ -222,17 +229,12 @@ export function StudioShell() {
   )
 
   const preview = (
-    <PreviewPanel
-      scopeClass={preset.scopeClass}
-      previewStyle={previewStyle}
-      dark={dark}
-    />
+    <PreviewFrame payload={previewPayload} scopeClass={preset.scopeClass} />
   )
 
   return (
     <IconLibraryProvider library={iconLibrary}>
       <div className="flex h-svh overflow-hidden bg-background text-foreground">
-        {/* Desktop: fixed sidebar — no overlapping resize hit-target */}
         <aside className="hidden w-[340px] shrink-0 border-r md:flex md:flex-col">
           {controls}
         </aside>
@@ -240,7 +242,6 @@ export function StudioShell() {
           {preview}
         </main>
 
-        {/* Mobile */}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col md:hidden">
           <Tabs
             value={mobileTab}

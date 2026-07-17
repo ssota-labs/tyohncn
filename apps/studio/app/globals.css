@@ -36,10 +36,18 @@ html {
 
 body {
   min-height: 100svh;
-  overflow: hidden;
   font-feature-settings:
     "rlig" 1,
     "calt" 1;
+}
+
+/* Editor host locks scroll; preview iframe document must scroll (create pattern). */
+body[data-studio-shell] {
+  overflow: hidden;
+}
+
+body[data-studio-preview] {
+  overflow: auto;
 }
 
 ::selection {

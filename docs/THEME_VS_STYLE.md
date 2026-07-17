@@ -32,7 +32,7 @@ Studio reads the same manifests so inspectors stay aligned with shipped CSS.
 
 ## Studio preview scope
 
-shadcn `create` isolates the catalog in an **iframe** and puts `style-${preset}` on the iframe `body`. tyohncn Studio keeps a **page-level** `.style-*` preview root (tweakcn-style resizable shell + horizontal-scroll compositions) and swaps compiled style packs in the main document so Theme/Style inspectors can apply live `style={{ --primary, --cn-* }}` overrides without a reload. Design controls also cover style preset + radius (shadcn create parity). Consumer apps still wrap with `className="style-mira"` (same contract as CLI/skills).
+shadcn `create` isolates the catalog in an **iframe** and puts `style-${preset}` on the iframe `body`. tyohncn Studio follows the same model: host controls + `/preview` iframe; live updates via `postMessage`; `style-*` and token overrides apply on the **iframe body** so Portals (Select/Popover/Dialog) stay inside the style scope. Consumer apps still wrap with `className="style-mira"` (same contract as CLI/skills).
 
 ## Migration (@apply → vars)
 

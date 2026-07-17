@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geist.variable} h-full overflow-hidden font-sans antialiased`}
-      >
+      <body className={`${geist.variable} h-full font-sans antialiased`}>
         {children}
       </body>
     </html>
