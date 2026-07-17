@@ -2,23 +2,23 @@
 
 import * as React from "react"
 
-import { PreviewFrame } from "@/components/preview-frame"
-import {
-  StudioControls,
-  type ProjectInfo,
-} from "@/components/studio-controls"
+import { Customizer, type ProjectInfo } from "@/components/customizer"
+import { Preview } from "@/components/preview"
 import {
   ICON_LIBRARY_OPTIONS,
   IconLibraryProvider,
   type IconLibraryName,
 } from "@/components/icon-placeholder"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { StudioPreviewPayload } from "@/lib/preview-protocol"
+import {
+  DEFAULT_STUDIO_PARAMS,
+  type PreviewScene,
+  type StudioParams,
+} from "@/lib/search-params"
 import {
   RADII,
   buildCssExport,
   presets,
-  themeDarkDefaults,
   themeDefaults,
   type PresetId,
   type RadiusName,
@@ -26,17 +26,11 @@ import {
 } from "@/lib/studio-presets"
 
 /**
- * Studio host shell — controls stay in the parent document.
- * Preview runs in an iframe (shadcn create pattern) so Portals inherit style-*.
+ * Studio host shell — Customizer + Preview (create page layout).
+ * Preview runs in one iframe; style-* never lands on the host document.
  */
 export function StudioShell() {
-  const [presetId, setPresetId] = React.useState<PresetId>("mira-vars")
-  const [iconLibrary, setIconLibrary] =
-    React.useState<IconLibraryName>("lucide")
-  const [radius, setRadius] = React.useState<RadiusName>("medium")
-  const [dark, setDark] = React.useState(false)
-  const [themeOverrides, setThemeOverrides] = React.useState<VariableMap>({})
-  const [styleOverrides, setStyleOverrides] = React.useState<VariableMap>({})
+  const [params, setParams] = React.useState<StudioParams>(DEFAULT_STUDIO_PARAMS)
   const [project, setProject] = React.useState<ProjectInfo | null>(null)
   const [mobileTab, setMobileTab] = React.useState<"controls" | "preview">(
     "preview"
@@ -73,17 +67,16 @@ export function StudioShell() {
         })
         const style = data.config?.style
         if (style && style in presets) {
-          applyPreset(
-            style as PresetId,
-            setPresetId,
-            setRadius,
-            setStyleOverrides,
-            setThemeOverrides
+          setParams((current) =>
+            applyPresetToParams(style as PresetId, current)
           )
         }
         const icon = data.config?.iconLibrary
         if (icon && ICON_LIBRARY_OPTIONS.some((o) => o.id === icon)) {
-          setIconLibrary(icon as IconLibraryName)
+          setParams((current) => ({
+            ...current,
+            iconLibrary: icon as IconLibraryName,
+          }))
         }
       })
       .catch(() => {
@@ -108,13 +101,13 @@ export function StudioShell() {
     for (const className of Array.from(root.classList)) {
       if (className.startsWith("style-")) root.classList.remove(className)
     }
-    root.classList.toggle("dark", dark)
-    root.style.colorScheme = dark ? "dark" : "light"
+    root.classList.toggle("dark", params.dark)
+    root.style.colorScheme = params.dark ? "dark" : "light"
     return () => {
       root.classList.remove("dark")
       root.style.colorScheme = ""
     }
-  }, [dark])
+  }, [params.dark])
 
   React.useEffect(() => {
     document.body.dataset.studioShell = ""
@@ -123,111 +116,60 @@ export function StudioShell() {
     }
   }, [])
 
-  const preset = presets[presetId]
+  const preset = presets[params.style]
   const radiusValue =
-    RADII.find((item) => item.name === radius)?.value ??
+    RADII.find((item) => item.name === params.radius)?.value ??
     themeDefaults["--radius"]
-  const previewStyle = React.useMemo(() => {
-    return {
-      ...(dark ? themeDarkDefaults : {}),
-      ...themeOverrides,
-      "--radius": themeOverrides["--radius"] ?? radiusValue,
-      ...(preset.editableStyle ? styleOverrides : {}),
-    } satisfies VariableMap
-  }, [dark, themeOverrides, radiusValue, preset.editableStyle, styleOverrides])
-
-  const previewPayload = React.useMemo<StudioPreviewPayload>(
-    () => ({
-      scopeClass: preset.scopeClass,
-      tab: "cards",
-      dark,
-      previewStyle,
-      iconLibrary,
-    }),
-    [preset.scopeClass, dark, previewStyle, iconLibrary]
-  )
+  const exportRadius =
+    params.themeOverrides["--radius"] ??
+    (params.radius !== "default" ? radiusValue : undefined)
 
   const cssExport = buildCssExport(
     preset.exportScopeClass,
     {
-      ...themeOverrides,
-      ...(themeOverrides["--radius"] || radius !== "default"
-        ? { "--radius": previewStyle["--radius"] }
-        : {}),
+      ...params.themeOverrides,
+      ...(exportRadius ? { "--radius": exportRadius } : {}),
     },
-    preset.editableStyle ? styleOverrides : {}
+    preset.editableStyle ? params.styleOverrides : {}
   )
 
   function updateToken(
     token: string,
     value: string,
     defaults: VariableMap,
-    setter: React.Dispatch<React.SetStateAction<VariableMap>>
+    key: "themeOverrides" | "styleOverrides"
   ) {
-    setter((current) => {
-      const next = { ...current }
+    setParams((current) => {
+      const nextMap = { ...current[key] }
       if (!value.trim() || value === defaults[token]) {
-        delete next[token]
+        delete nextMap[token]
       } else {
-        next[token] = value
+        nextMap[token] = value
       }
-      return next
+      return { ...current, [key]: nextMap }
     })
   }
 
   function handlePresetChange(nextId: PresetId) {
-    applyPreset(
-      nextId,
-      setPresetId,
-      setRadius,
-      setStyleOverrides,
-      setThemeOverrides
-    )
+    setParams((current) => applyPresetToParams(nextId, current))
   }
 
   function handleRadiusChange(next: RadiusName) {
-    setRadius(next)
-    const value = RADII.find((item) => item.name === next)?.value
-    if (!value) return
-    setThemeOverrides((current) => {
-      const nextOverrides = { ...current }
-      if (value === themeDefaults["--radius"]) {
-        delete nextOverrides["--radius"]
+    setParams((current) => {
+      const value = RADII.find((item) => item.name === next)?.value
+      const themeOverrides = { ...current.themeOverrides }
+      if (!value || value === themeDefaults["--radius"]) {
+        delete themeOverrides["--radius"]
       } else {
-        nextOverrides["--radius"] = value
+        themeOverrides["--radius"] = value
       }
-      return nextOverrides
+      return { ...current, radius: next, themeOverrides }
     })
   }
 
-  const controlsProps = {
-    project,
-    presetId,
-    onPresetChange: handlePresetChange,
-    radius,
-    onRadiusChange: handleRadiusChange,
-    iconLibrary,
-    onIconLibraryChange: setIconLibrary,
-    dark,
-    onDarkChange: setDark,
-    themeOverrides,
-    styleOverrides,
-    onThemeTokenChange: (token: string, value: string) =>
-      updateToken(token, value, themeDefaults, setThemeOverrides),
-    onStyleTokenChange: (token: string, value: string) =>
-      updateToken(token, value, preset.styleDefaults, setStyleOverrides),
-    onResetTheme: () => {
-      setThemeOverrides({})
-      setRadius(preset.forcedRadius ?? "medium")
-    },
-    onResetStyle: () => setStyleOverrides({}),
-    cssExport,
-  } as const
-
   return (
-    <IconLibraryProvider library={iconLibrary}>
+    <IconLibraryProvider library={params.iconLibrary}>
       <div className="flex h-svh flex-col overflow-hidden bg-background text-foreground md:flex-row">
-        {/* Mobile-only Controls / Preview switch — single StudioControls instance below */}
         <div className="relative z-20 shrink-0 border-b px-2 py-2 md:hidden">
           <Tabs
             value={mobileTab}
@@ -253,7 +195,40 @@ export function StudioShell() {
               : "relative z-10 hidden w-[340px] shrink-0 flex-col border-r md:flex"
           }
         >
-          <StudioControls {...controlsProps} />
+          <Customizer
+            project={project}
+            presetId={params.style}
+            onPresetChange={handlePresetChange}
+            radius={params.radius}
+            onRadiusChange={handleRadiusChange}
+            iconLibrary={params.iconLibrary}
+            onIconLibraryChange={(id) =>
+              setParams((current) => ({ ...current, iconLibrary: id }))
+            }
+            dark={params.dark}
+            onDarkChange={(dark) =>
+              setParams((current) => ({ ...current, dark }))
+            }
+            themeOverrides={params.themeOverrides}
+            styleOverrides={params.styleOverrides}
+            onThemeTokenChange={(token, value) =>
+              updateToken(token, value, themeDefaults, "themeOverrides")
+            }
+            onStyleTokenChange={(token, value) =>
+              updateToken(token, value, preset.styleDefaults, "styleOverrides")
+            }
+            onResetTheme={() => {
+              setParams((current) => ({
+                ...current,
+                themeOverrides: {},
+                radius: presets[current.style].forcedRadius ?? "medium",
+              }))
+            }}
+            onResetStyle={() =>
+              setParams((current) => ({ ...current, styleOverrides: {} }))
+            }
+            cssExport={cssExport}
+          />
         </aside>
 
         <main
@@ -263,9 +238,11 @@ export function StudioShell() {
               : "hidden min-h-0 min-w-0 flex-1 flex-col md:flex"
           }
         >
-          <PreviewFrame
-            payload={previewPayload}
-            scopeClass={preset.scopeClass}
+          <Preview
+            params={params}
+            onSceneChange={(scene: PreviewScene) =>
+              setParams((current) => ({ ...current, scene }))
+            }
           />
         </main>
       </div>
@@ -273,29 +250,31 @@ export function StudioShell() {
   )
 }
 
-function applyPreset(
+function applyPresetToParams(
   nextId: PresetId,
-  setPresetId: React.Dispatch<React.SetStateAction<PresetId>>,
-  setRadius: React.Dispatch<React.SetStateAction<RadiusName>>,
-  setStyleOverrides: React.Dispatch<React.SetStateAction<VariableMap>>,
-  setThemeOverrides: React.Dispatch<React.SetStateAction<VariableMap>>
-) {
+  current: StudioParams
+): StudioParams {
   const next = presets[nextId]
-  setPresetId(nextId)
-  setStyleOverrides({})
+  let radius = current.radius
+  let themeOverrides = { ...current.themeOverrides }
+
   if (next.forcedRadius) {
-    setRadius(next.forcedRadius)
+    radius = next.forcedRadius
     const value = RADII.find((item) => item.name === next.forcedRadius)?.value
-    setThemeOverrides((current) => {
-      const nextOverrides = { ...current }
-      if (!value || value === themeDefaults["--radius"]) {
-        delete nextOverrides["--radius"]
-      } else {
-        nextOverrides["--radius"] = value
-      }
-      return nextOverrides
-    })
-  } else if (next.disallowRadius?.includes("large")) {
-    setRadius((current) => (current === "large" ? "medium" : current))
+    if (!value || value === themeDefaults["--radius"]) {
+      delete themeOverrides["--radius"]
+    } else {
+      themeOverrides["--radius"] = value
+    }
+  } else if (next.disallowRadius?.includes("large") && radius === "large") {
+    radius = "medium"
+  }
+
+  return {
+    ...current,
+    style: nextId,
+    radius,
+    styleOverrides: {},
+    themeOverrides,
   }
 }

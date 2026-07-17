@@ -30,9 +30,17 @@ Style answers: “how dense / rounded / chrome-y is the button?”
 
 Studio reads the same manifests so inspectors stay aligned with shipped CSS.
 
-## Studio preview scope
+## Studio preview scope (create parity)
 
-shadcn `create` isolates the catalog in an **iframe** and puts `style-${preset}` on the iframe `body`. tyohncn Studio follows the same model: host controls + `/preview` iframe; live updates via `postMessage`; `style-*` and token overrides apply on the **iframe body** so Portals (Select/Popover/Dialog) stay inside the style scope. Consumer apps still wrap with `className="style-mira"` (same contract as CLI/skills).
+Mirrors shadcn `/create` three layers:
+
+| Layer | Path / module | Role |
+|-------|---------------|------|
+| Host | `/` — Customizer + Preview | Controls only; never `style-*` on host |
+| Iframe document | `/preview/[scene]` | One scene block (`cards` \| `catalog` \| `colors`) |
+| Bridge | `design-system-params` postMessage | Seed via iframe `src` query; live updates without reload |
+
+`DesignSystemProvider` (inside the iframe) puts `style-${preset}` on **iframe `<body>`** and injects theme CSS vars via a managed `<style>` tag. Portals stay in-scope. Consumer apps still wrap with `className="style-mira"` (same contract as CLI/skills).
 
 ## Migration (@apply → vars)
 

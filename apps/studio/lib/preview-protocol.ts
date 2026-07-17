@@ -1,39 +1,17 @@
-import type { IconLibraryName } from "@/components/icon-placeholder"
-import type { ScopeClass, VariableMap } from "@/lib/studio-presets"
+import type { StudioParams } from "@/lib/search-params"
 
-export const STUDIO_PREVIEW_MESSAGE = "tyohn-studio-preview" as const
-export const STUDIO_PREVIEW_READY = "tyohn-studio-preview-ready" as const
+/** Matches shadcn create's parent → iframe message type name. */
+export const DESIGN_SYSTEM_PARAMS_MESSAGE = "design-system-params" as const
 
-export type PreviewTab = "cards" | "components" | "colors"
-
-export type StudioPreviewPayload = {
-  scopeClass: ScopeClass
-  tab: PreviewTab
-  dark: boolean
-  previewStyle: VariableMap
-  iconLibrary: IconLibraryName
+export type DesignSystemParamsMessage = {
+  type: typeof DESIGN_SYSTEM_PARAMS_MESSAGE
+  data: StudioParams
 }
 
-export type StudioPreviewMessage = {
-  type: typeof STUDIO_PREVIEW_MESSAGE
-  payload: StudioPreviewPayload
-}
-
-export type StudioPreviewReadyMessage = {
-  type: typeof STUDIO_PREVIEW_READY
-}
-
-export function isStudioPreviewMessage(
+export function isDesignSystemParamsMessage(
   data: unknown
-): data is StudioPreviewMessage {
+): data is DesignSystemParamsMessage {
   if (!data || typeof data !== "object") return false
-  const msg = data as StudioPreviewMessage
-  return msg.type === STUDIO_PREVIEW_MESSAGE && !!msg.payload
-}
-
-export function isStudioPreviewReadyMessage(
-  data: unknown
-): data is StudioPreviewReadyMessage {
-  if (!data || typeof data !== "object") return false
-  return (data as StudioPreviewReadyMessage).type === STUDIO_PREVIEW_READY
+  const msg = data as DesignSystemParamsMessage
+  return msg.type === DESIGN_SYSTEM_PARAMS_MESSAGE && !!msg.data
 }

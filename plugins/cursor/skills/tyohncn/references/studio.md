@@ -13,13 +13,17 @@ Binds to the consumer project via `TYOHN_PROJECT_ROOT`.
 
 ## Architecture (shadcn create parity)
 
+Three layers — not per-component iframes:
+
 | Layer | Role |
 |-------|------|
-| Host (`/`) | Controls: style preset, radius, theme tokens, density, icons, CSS export |
-| Iframe (`/preview`) | Cards / Components / Colors compositions |
-| Bridge | `postMessage` (`tyohn-studio-preview`) — iframe `src` stays stable |
+| Host (`/`) | Customizer: style, radius, theme/density tokens, icons, CSS export |
+| Iframe (`/preview/[scene]`) | One scene block: `cards` \| `catalog` \| `colors` |
+| Bridge | `postMessage` type `design-system-params`; iframe `src` seeds scene + knobs |
 
-`style-*` is applied on the **iframe `<body>`** (not the host). That keeps Portals in-scope.
+`DesignSystemProvider` applies `style-*` on the **iframe `<body>`** and injects theme vars. Host never gets `style-*`.
+
+Key modules: `components/preview.tsx`, `components/design-system-provider.tsx`, `components/scenes/*`, `lib/search-params.ts`, `lib/use-iframe-sync.tsx`.
 
 ## What it does
 
@@ -27,8 +31,8 @@ Binds to the consumer project via `TYOHN_PROJECT_ROOT`.
 - Theme inspector (semantic CSS vars)
 - Style inspector (`--cn-*` on `*-vars` / ssota)
 - Dark / light for the preview iframe
-- Horizontal-scroll Cards composition
-- Full component catalog
+- Horizontal-scroll Cards scene
+- Full component catalog scene
 - CSS export (clipboard; consumer scope for `*-vars`)
 
 ## What it does not do (yet)
