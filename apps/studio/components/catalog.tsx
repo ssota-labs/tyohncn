@@ -3,7 +3,6 @@
 import * as React from "react"
 import { Check, FileText, Inbox } from "lucide-react"
 import { toast } from "sonner"
-import { ThemeProvider } from "next-themes"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import { Button } from "@/components/ui/button"
@@ -266,7 +265,7 @@ import { DirectionProvider } from "@/components/ui/direction"
 // ─── Chart config ─────────────────────────────────────────────────────────────
 
 const chartConfig = {
-  desktop: { label: "Desktop", color: "var(--primary)" },
+  desktop: { label: "Desktop", color: "var(--chart-1)" },
 } satisfies ChartConfig
 
 const chartData = [
@@ -283,20 +282,20 @@ export function Catalog() {
   const [calDate, setCalDate] = React.useState<Date | undefined>(undefined)
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <TooltipProvider>
-        <Toaster />
-        <div className="grid gap-6">
-          <header>
-            <h2 className="text-xl font-semibold tracking-tight">
-              Component catalog
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              All @tyohn/registry UI components under the active style scope.
-            </p>
-          </header>
+    <TooltipProvider>
+      <Toaster />
+      <div className="grid gap-6">
+        <header>
+          <h2 className="text-xl font-semibold tracking-tight">
+            Component catalog
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Full-width composition under the active style scope. Scroll
+            horizontally to keep the desktop layout intact.
+          </p>
+        </header>
 
-          <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-6">
             {/* ── 1. Button ── */}
             <CatalogCard
               title="Button"
@@ -1107,13 +1106,13 @@ export function Catalog() {
                 orientation="horizontal"
                 className="h-40 rounded-lg border"
               >
-                <ResizablePanel defaultSize={50}>
+                <ResizablePanel defaultSize="50">
                   <div className="flex h-full items-center justify-center p-4 text-sm text-muted-foreground">
                     Left panel
                   </div>
                 </ResizablePanel>
                 <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={50}>
+                <ResizablePanel defaultSize="50">
                   <div className="flex h-full items-center justify-center p-4 text-sm text-muted-foreground">
                     Right panel
                   </div>
@@ -1367,10 +1366,9 @@ export function Catalog() {
                 </Breadcrumb>
               </DirectionProvider>
             </CatalogCard>
-          </div>
         </div>
-      </TooltipProvider>
-    </ThemeProvider>
+      </div>
+    </TooltipProvider>
   )
 }
 

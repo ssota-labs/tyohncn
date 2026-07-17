@@ -57,12 +57,24 @@ export function useIconLibrary() {
 
 type AnyIcon = React.ComponentType<Record<string, unknown>>
 
+function isIconComponent(value: unknown): value is AnyIcon {
+  // lucide / tabler / phosphor ship forwardRef icons as objects ($$typeof),
+  // not plain functions — typeof === "function" alone misses them and falls
+  // back to SquareIcon empty boxes in Studio.
+  if (typeof value === "function") return true
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "$$typeof" in (value as Record<string, unknown>)
+  )
+}
+
 function pick(
   mod: Record<string, unknown>,
   name: string
 ): AnyIcon | null {
   const value = mod[name]
-  return typeof value === "function" ? (value as AnyIcon) : null
+  return isIconComponent(value) ? value : null
 }
 
 export function IconPlaceholder(props: IconPlaceholderProps) {

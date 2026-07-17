@@ -11,20 +11,29 @@ npx tyohncn@latest studio
 
 Binds to the consumer project via `TYOHN_PROJECT_ROOT`.
 
+## Architecture (shadcn create parity)
+
+Three layers — not per-component iframes:
+
+| Layer | Role |
+|-------|------|
+| Host (`/`) | Customizer: style, radius, theme/density tokens, icons, CSS export |
+| Iframe (`/preview/[scene]`) | One scene block: `cards` \| `catalog` \| `colors` |
+| Bridge | `postMessage` type `design-system-params`; iframe `src` seeds scene + knobs |
+
+`DesignSystemProvider` applies `style-*` on the **iframe `<body>`** and injects theme vars. Host never gets `style-*`.
+
+Key modules: `components/preview.tsx`, `components/design-system-provider.tsx`, `components/scenes/*`, `lib/search-params.ts`, `lib/use-iframe-sync.tsx`.
+
 ## What it does
 
-- Component catalog (button / input / card / …)
-- Theme inspector (semantic CSS vars; color picker + text)
-- Style inspector (`--cn-*` on `*-vars` packs; dimension controls)
-- Preset + icon library switchers (**preview only**; registry Popover)
-- Icon sample row via `IconPlaceholder`
-- Project meta: installed components, suggested CLI commands
-- CSS export of token overrides
-
-## Preview scope (vs shadcn create)
-
-shadcn `create` = iframe + `style-*` on iframe `body`.  
-tyohncn Studio = **page-level** `.style-*` catalog wrapper + compiled style packs bundled via PostCSS (`globals.css`). Inspectors inject CSS vars on the same wrapper for live overrides. No iframe.
+- Style preset + radius (create-like design controls)
+- Theme inspector (semantic CSS vars)
+- Style inspector (`--cn-*` on `*-vars` / ssota)
+- Dark / light for the preview iframe
+- Horizontal-scroll Cards scene
+- Full component catalog scene
+- CSS export (clipboard; consumer scope for `*-vars`)
 
 ## What it does not do (yet)
 

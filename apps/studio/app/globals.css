@@ -7,6 +7,8 @@
 @source "../components/**/*.{ts,tsx}";
 @source "../../../packages/registry/ui/**/*.{ts,tsx}";
 
+@custom-variant dark (&:is(.dark *));
+
 @utility no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -19,15 +21,33 @@
   color-scheme: light;
 }
 
+.dark {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100svh;
   font-feature-settings:
     "rlig" 1,
     "calt" 1;
+}
+
+/* Editor host locks scroll; preview iframe document must scroll (create pattern). */
+body[data-studio-shell] {
+  overflow: hidden;
+}
+
+body[data-studio-preview] {
+  overflow: auto;
 }
 
 ::selection {
