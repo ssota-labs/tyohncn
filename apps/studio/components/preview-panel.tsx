@@ -71,8 +71,10 @@ export function PreviewPanel({
               className="m-0 size-full min-h-0 overflow-hidden data-hidden:hidden"
             >
               <PreviewScrollSurface>
-                <div className="min-w-[1100px] p-4 md:p-6">
-                  <Catalog />
+                <div className="w-max min-w-full p-4 md:p-6">
+                  <div className="w-[1100px]">
+                    <Catalog />
+                  </div>
                 </div>
               </PreviewScrollSurface>
             </TabsContent>

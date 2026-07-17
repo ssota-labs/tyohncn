@@ -39,6 +39,7 @@ import {
   RADII,
   presets,
   styleTokens,
+  themeDarkDefaults,
   themeDefaults,
   themeTokenGroups,
   type PresetId,
@@ -175,9 +176,10 @@ export function StudioControls({
         </div>
         <Button
           size="icon-sm"
-          variant="ghost"
+          variant={dark ? "secondary" : "ghost"}
           type="button"
-          aria-label={dark ? "Switch to light" : "Switch to dark"}
+          aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+          title={dark ? "Light mode" : "Dark mode"}
           onClick={() => onDarkChange(!dark)}
         >
           {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -339,7 +341,7 @@ export function StudioControls({
                   </p>
                   <TokenGrid
                     tokens={group.tokens}
-                    defaults={themeDefaults}
+                    defaults={dark ? { ...themeDefaults, ...themeDarkDefaults } : themeDefaults}
                     overrides={themeOverrides}
                     onChange={onThemeTokenChange}
                   />

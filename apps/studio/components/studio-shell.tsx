@@ -22,6 +22,7 @@ import {
   RADII,
   buildCssExport,
   presets,
+  themeDarkDefaults,
   themeDefaults,
   type PresetId,
   type RadiusName,
@@ -124,7 +125,10 @@ export function StudioShell() {
   const radiusValue =
     RADII.find((item) => item.name === radius)?.value ?? themeDefaults["--radius"]
 
+  const modeDefaults = dark ? themeDarkDefaults : themeDefaults
+
   const previewStyle = {
+    ...modeDefaults,
     ...themeOverrides,
     "--radius": themeOverrides["--radius"] ?? radiusValue,
     ...(preset.editableStyle ? styleOverrides : {}),

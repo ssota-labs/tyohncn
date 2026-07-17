@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { Area, AreaChart, Line, LineChart } from "recharts"
 
 import { Button } from "@/components/ui/button"
@@ -19,10 +18,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Avatar,
-  AvatarFallback,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
   Select,
@@ -63,28 +59,24 @@ const plans = [
 
 /**
  * tweakcn-style Cards composition.
- * Uses a fixed design width so the full desktop layout stays intact and
- * scrolls horizontally inside the preview viewport instead of crushing.
+ * Fixed-width columns in a horizontal track so the full desktop layout
+ * scrolls sideways instead of crushing when the preview panel is narrow.
  */
 export function CardsDemo() {
   return (
-    <div className="min-w-[1100px] p-4 **:data-[slot=card]:shadow-none md:p-6">
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="flex flex-col gap-4">
-          <CardsStats />
-          <div className="grid gap-4 md:grid-cols-2">
-            <CardsForms />
-            <div className="flex flex-col gap-4">
-              <CardsCreateAccount />
-              <CardsTeamMembers />
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-4">
-          <CardsShare />
-          <CardsCookieSettings />
-          <CardsReportIssue />
-        </div>
+    <div className="flex w-max min-w-full gap-4 p-4 **:data-[slot=card]:shadow-none md:p-6">
+      <div className="flex w-[520px] shrink-0 flex-col gap-4">
+        <CardsStats />
+        <CardsForms />
+      </div>
+      <div className="flex w-[380px] shrink-0 flex-col gap-4">
+        <CardsCreateAccount />
+        <CardsTeamMembers />
+        <CardsCookieSettings />
+      </div>
+      <div className="flex w-[400px] shrink-0 flex-col gap-4">
+        <CardsShare />
+        <CardsReportIssue />
       </div>
     </div>
   )
@@ -100,8 +92,15 @@ function CardsStats() {
           <CardDescription>+20.1% from last month</CardDescription>
         </CardHeader>
         <CardContent className="pb-0">
-          <ChartContainer config={chartConfig} className="h-[90px] w-full">
-            <LineChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[90px] w-full"
+            initialDimension={{ width: 220, height: 90 }}
+          >
+            <LineChart
+              data={chartData}
+              margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
+            >
               <Line
                 type="monotone"
                 strokeWidth={2}
@@ -121,8 +120,15 @@ function CardsStats() {
           <CardDescription>+180.1% from last month</CardDescription>
         </CardHeader>
         <CardContent className="pb-0">
-          <ChartContainer config={chartConfig} className="h-[90px] w-full">
-            <AreaChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[90px] w-full"
+            initialDimension={{ width: 220, height: 90 }}
+          >
+            <AreaChart
+              data={chartData}
+              margin={{ top: 5, right: 0, left: 0, bottom: 0 }}
+            >
               <Area
                 type="monotone"
                 dataKey="subscription"
@@ -162,7 +168,7 @@ function CardsForms() {
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="card-number">Card Number</Label>
-            <div className="grid grid-cols-[1fr_80px_60px] gap-3">
+            <div className="grid grid-cols-[1fr_72px_56px] gap-2">
               <Input id="card-number" placeholder="1234 1234 1234 1234" />
               <Input id="card-expiry" placeholder="MM/YY" />
               <Input id="card-cvc" placeholder="CVC" />
@@ -273,13 +279,15 @@ function CardsTeamMembers() {
           { name: "Isabella Nguyen", email: "i@example.com", role: "Member", initials: "IN" },
         ].map((member) => (
           <div key={member.email} className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <Avatar>
                 <AvatarFallback>{member.initials}</AvatarFallback>
               </Avatar>
-              <div className="grid gap-0.5 text-sm">
-                <div className="font-medium">{member.name}</div>
-                <div className="text-muted-foreground">{member.email}</div>
+              <div className="grid min-w-0 gap-0.5 text-sm">
+                <div className="truncate font-medium">{member.name}</div>
+                <div className="truncate text-muted-foreground">
+                  {member.email}
+                </div>
               </div>
             </div>
             <Badge variant="secondary">{member.role}</Badge>
@@ -304,9 +312,11 @@ function CardsShare() {
           <Input
             readOnly
             defaultValue="https://example.com/docs/123"
-            className="flex-1"
+            className="min-w-0 flex-1"
           />
-          <Button variant="secondary">Copy Link</Button>
+          <Button variant="secondary" className="shrink-0">
+            Copy Link
+          </Button>
         </div>
         <Separator />
         <div className="flex flex-col gap-3">
@@ -316,17 +326,19 @@ function CardsShare() {
             { name: "Isabella Nguyen", email: "b@example.com", initials: "IN" },
           ].map((person) => (
             <div key={person.email} className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <Avatar size="sm">
                   <AvatarFallback>{person.initials}</AvatarFallback>
                 </Avatar>
-                <div className="grid text-sm">
-                  <span className="font-medium">{person.name}</span>
-                  <span className="text-muted-foreground">{person.email}</span>
+                <div className="grid min-w-0 text-sm">
+                  <span className="truncate font-medium">{person.name}</span>
+                  <span className="truncate text-muted-foreground">
+                    {person.email}
+                  </span>
                 </div>
               </div>
               <Select defaultValue="edit">
-                <SelectTrigger className="w-[110px]">
+                <SelectTrigger className="w-[110px] shrink-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -441,7 +453,10 @@ function CardsReportIssue() {
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea id="description" placeholder="Please include all information relevant to your issue." />
+          <Textarea
+            id="description"
+            placeholder="Please include all information relevant to your issue."
+          />
         </div>
       </CardContent>
       <CardFooter className="justify-between">
