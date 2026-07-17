@@ -279,11 +279,11 @@ export function StudioControls({
                   onIconLibraryChange(value as IconLibraryName)
                 }
               />
-              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background/60 px-3 py-2.5">
+              <div className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-background/60 px-2 py-2">
                 {ICON_SAMPLES.map((sample) => (
                   <div
                     key={sample.lucide}
-                    className="flex flex-col items-center gap-1 text-muted-foreground"
+                    className="flex size-8 items-center justify-center text-foreground"
                     title={sample.lucide}
                   >
                     <IconPlaceholder
@@ -293,6 +293,7 @@ export function StudioControls({
                       phosphor={sample.phosphor}
                       remixicon={sample.remixicon}
                       className="size-4"
+                      aria-hidden
                     />
                   </div>
                 ))}

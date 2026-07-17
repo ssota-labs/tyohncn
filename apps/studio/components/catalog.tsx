@@ -265,7 +265,7 @@ import { DirectionProvider } from "@/components/ui/direction"
 // ─── Chart config ─────────────────────────────────────────────────────────────
 
 const chartConfig = {
-  desktop: { label: "Desktop", color: "var(--primary)" },
+  desktop: { label: "Desktop", color: "var(--chart-1)" },
 } satisfies ChartConfig
 
 const chartData = [
