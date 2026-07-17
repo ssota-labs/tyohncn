@@ -164,19 +164,19 @@ export function StudioControls({
   }
 
   return (
-    <div className="flex size-full min-h-0 flex-col overflow-hidden">
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b px-3 py-2">
+    <div className="flex size-full min-h-0 min-w-0 flex-col overflow-hidden bg-background">
+      <div className="flex shrink-0 items-center justify-between gap-2 border-b px-4 py-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold tracking-tight">
             tyohn Studio
           </p>
           <p className="truncate text-[11px] text-muted-foreground">
-            Style · theme · density
+            Preview only · apply via CLI
           </p>
         </div>
         <Button
           size="icon-sm"
-          variant={dark ? "secondary" : "ghost"}
+          variant={dark ? "secondary" : "outline"}
           type="button"
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           title={dark ? "Light mode" : "Dark mode"}
@@ -186,7 +186,7 @@ export function StudioControls({
         </Button>
       </div>
 
-      <div className="flex shrink-0 gap-1 overflow-x-auto border-b px-2 py-2 no-scrollbar">
+      <div className="flex shrink-0 gap-1 border-b px-3 py-2">
         {(
           [
             ["design", "Design"],
@@ -202,8 +202,8 @@ export function StudioControls({
             className={cn(
               "shrink-0 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
               controlTab === id
-                ? "bg-muted text-foreground"
-                : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             {label}
@@ -211,7 +211,7 @@ export function StudioControls({
         ))}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
         {controlTab === "design" ? (
           <div className="grid gap-4">
             <Panel title="Style" icon={<Palette className="size-4" />}>
@@ -499,10 +499,10 @@ function Panel({
   children: React.ReactNode
 }) {
   return (
-    <section className="rounded-xl border bg-card p-3 shadow-sm">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold">
-          <span className="text-muted-foreground">{icon}</span>
+    <section className="grid gap-3 border-b border-border/70 pb-5 last:border-b-0 last:pb-0">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          <span aria-hidden>{icon}</span>
           {title}
         </h2>
         {action}

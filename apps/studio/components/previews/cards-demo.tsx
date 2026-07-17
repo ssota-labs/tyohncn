@@ -52,24 +52,23 @@ const plans = [
 ] as const
 
 /**
- * tweakcn-style Cards composition.
- * Fixed-width columns in a horizontal track so the full desktop layout
- * scrolls sideways instead of crushing when the preview panel is narrow.
+ * Fixed-width columns in a horizontal track (tweakcn pattern).
+ * Parent must be overflow-auto + min-w-0 so this scrolls sideways.
  */
 export function CardsDemo() {
   return (
-    <div className="flex w-max min-w-full gap-4 p-4 **:data-[slot=card]:shadow-none md:p-6">
-      <div className="flex w-[520px] shrink-0 flex-col gap-4">
+    <div className="flex w-max gap-4 p-6 **:data-[slot=card]:shadow-none">
+      <div className="flex w-[480px] shrink-0 flex-col gap-4">
         <CardsStats />
         <CardsForms />
       </div>
-      <div className="flex w-[380px] shrink-0 flex-col gap-4">
+      <div className="flex w-[360px] shrink-0 flex-col gap-4">
         <CardsCreateAccount />
         <CardsTeamMembers />
-        <CardsCookieSettings />
       </div>
-      <div className="flex w-[400px] shrink-0 flex-col gap-4">
+      <div className="flex w-[380px] shrink-0 flex-col gap-4">
         <CardsShare />
+        <CardsCookieSettings />
         <CardsReportIssue />
       </div>
     </div>
@@ -88,7 +87,7 @@ function CardsStats() {
         <CardContent className="pb-0">
           <div className="h-[90px] w-full overflow-hidden">
             <LineChart
-              width={220}
+              width={200}
               height={90}
               data={chartData}
               margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
@@ -97,7 +96,7 @@ function CardsStats() {
                 type="monotone"
                 strokeWidth={2}
                 dataKey="revenue"
-                stroke="var(--primary)"
+                stroke="var(--chart-1)"
                 activeDot={{ r: 6 }}
                 dot={false}
               />
@@ -114,7 +113,7 @@ function CardsStats() {
         <CardContent className="pb-0">
           <div className="h-[90px] w-full overflow-hidden">
             <AreaChart
-              width={220}
+              width={200}
               height={90}
               data={chartData}
               margin={{ top: 5, right: 0, left: 0, bottom: 0 }}
@@ -122,8 +121,8 @@ function CardsStats() {
               <Area
                 type="monotone"
                 dataKey="subscription"
-                stroke="var(--primary)"
-                fill="var(--primary)"
+                stroke="var(--chart-1)"
+                fill="var(--chart-1)"
                 fillOpacity={0.2}
                 strokeWidth={2}
               />
@@ -166,7 +165,10 @@ function CardsForms() {
           </div>
           <fieldset className="flex flex-col gap-3">
             <legend className="text-sm font-medium">Plan</legend>
-            <RadioGroup defaultValue="starter" className="grid gap-3 sm:grid-cols-2">
+            <RadioGroup
+              defaultValue="starter"
+              className="grid gap-3 sm:grid-cols-2"
+            >
               {plans.map((plan) => (
                 <Label
                   key={plan.id}
@@ -264,11 +266,29 @@ function CardsTeamMembers() {
       </CardHeader>
       <CardContent className="grid gap-4">
         {[
-          { name: "Sofia Davis", email: "m@example.com", role: "Owner", initials: "SD" },
-          { name: "Jackson Lee", email: "p@example.com", role: "Member", initials: "JL" },
-          { name: "Isabella Nguyen", email: "i@example.com", role: "Member", initials: "IN" },
+          {
+            name: "Sofia Davis",
+            email: "m@example.com",
+            role: "Owner",
+            initials: "SD",
+          },
+          {
+            name: "Jackson Lee",
+            email: "p@example.com",
+            role: "Member",
+            initials: "JL",
+          },
+          {
+            name: "Isabella Nguyen",
+            email: "i@example.com",
+            role: "Member",
+            initials: "IN",
+          },
         ].map((member) => (
-          <div key={member.email} className="flex items-center justify-between gap-3">
+          <div
+            key={member.email}
+            className="flex items-center justify-between gap-3"
+          >
             <div className="flex min-w-0 items-center gap-3">
               <Avatar>
                 <AvatarFallback>{member.initials}</AvatarFallback>
@@ -313,9 +333,16 @@ function CardsShare() {
           <div className="text-sm font-medium">People with access</div>
           {[
             { name: "Olivia Martin", email: "m@example.com", initials: "OM" },
-            { name: "Isabella Nguyen", email: "b@example.com", initials: "IN" },
+            {
+              name: "Isabella Nguyen",
+              email: "b@example.com",
+              initials: "IN",
+            },
           ].map((person) => (
-            <div key={person.email} className="flex items-center justify-between gap-3">
+            <div
+              key={person.email}
+              className="flex items-center justify-between gap-3"
+            >
               <div className="flex min-w-0 items-center gap-3">
                 <Avatar size="sm">
                   <AvatarFallback>{person.initials}</AvatarFallback>
@@ -364,13 +391,6 @@ function CardsCookieSettings() {
             id: "functional",
             title: "Functional Cookies",
             description: "These cookies allow the site to remember choices.",
-            checked: false,
-            disabled: false,
-          },
-          {
-            id: "performance",
-            title: "Performance Cookies",
-            description: "These cookies help us improve the site.",
             checked: false,
             disabled: false,
           },

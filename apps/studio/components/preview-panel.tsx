@@ -22,14 +22,14 @@ export function PreviewPanel({
   const [tab, setTab] = React.useState("cards")
 
   return (
-    <div className="flex size-full min-h-0 flex-col overflow-hidden">
+    <div className="flex size-full min-h-0 min-w-0 flex-col overflow-hidden">
       <Tabs
         value={tab}
         onValueChange={setTab}
-        className="flex size-full min-h-0 flex-col overflow-hidden"
+        className="flex size-full min-h-0 min-w-0 flex-col overflow-hidden"
       >
-        <div className="flex shrink-0 items-center justify-between gap-3 border-b px-3 py-2">
-          <div className="min-w-0 flex-1 overflow-x-auto no-scrollbar">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b bg-background px-3 py-2">
+          <div className="min-w-0 flex-1 overflow-x-auto">
             <TabsList variant="line" className="h-9 w-max">
               <TabsTrigger value="cards" className="px-3">
                 Cards
@@ -42,24 +42,31 @@ export function PreviewPanel({
               </TabsTrigger>
             </TabsList>
           </div>
-          <p className="shrink-0 text-xs text-muted-foreground">
+          <p className="shrink-0 font-mono text-[11px] text-muted-foreground">
             .{scopeClass}
           </p>
         </div>
 
+        {/*
+          Style pack + token overrides live ONLY here.
+          Editor chrome above stays on the default theme.
+        */}
         <div
           className={cn(
-            "relative min-h-0 flex-1 overflow-hidden bg-background",
+            "relative min-h-0 min-w-0 flex-1 overflow-hidden",
             dark && "dark"
           )}
         >
           <div
-            className={cn(scopeClass, "size-full min-h-0 overflow-hidden")}
+            className={cn(
+              scopeClass,
+              "flex size-full min-h-0 min-w-0 flex-col overflow-hidden bg-background text-foreground"
+            )}
             style={previewStyle}
           >
             <TabsContent
               value="cards"
-              className="m-0 size-full min-h-0 overflow-hidden data-hidden:hidden"
+              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
             >
               <PreviewScrollSurface>
                 <CardsDemo />
@@ -68,23 +75,21 @@ export function PreviewPanel({
 
             <TabsContent
               value="components"
-              className="m-0 size-full min-h-0 overflow-hidden data-hidden:hidden"
+              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
             >
               <PreviewScrollSurface>
-                <div className="w-max min-w-full p-4 md:p-6">
-                  <div className="w-[1100px]">
-                    <Catalog />
-                  </div>
+                <div className="w-[1100px] p-4 md:p-6">
+                  <Catalog />
                 </div>
               </PreviewScrollSurface>
             </TabsContent>
 
             <TabsContent
               value="colors"
-              className="m-0 size-full min-h-0 overflow-hidden data-hidden:hidden"
+              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
             >
               <PreviewScrollSurface>
-                <div className="min-w-[720px] p-4 md:p-6">
+                <div className="w-[720px] p-4 md:p-6">
                   <ColorSwatches style={previewStyle} />
                 </div>
               </PreviewScrollSurface>
@@ -98,7 +103,10 @@ export function PreviewPanel({
 
 function PreviewScrollSurface({ children }: { children: React.ReactNode }) {
   return (
-    <div className="size-full overflow-auto overscroll-contain">
+    <div
+      data-studio-preview-scroll
+      className="size-full min-h-0 min-w-0 overflow-auto"
+    >
       {children}
     </div>
   )
@@ -128,10 +136,10 @@ function ColorSwatches({
       <div>
         <h2 className="text-lg font-semibold tracking-tight">Color palette</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Live semantic tokens applied to the preview root.
+          Live semantic tokens on the preview root.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
         {SWATCHES.map(([token, label]) => (
           <div
             key={token}
@@ -139,10 +147,7 @@ function ColorSwatches({
           >
             <div
               className="h-20 border-b"
-              style={{
-                background:
-                  style[token] ?? `var(${token})`,
-              }}
+              style={{ background: style[token] ?? `var(${token})` }}
             />
             <div className="grid gap-0.5 p-3 text-sm">
               <span className="font-medium">{label}</span>

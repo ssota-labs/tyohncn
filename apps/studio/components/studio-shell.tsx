@@ -12,11 +12,6 @@ import {
   IconLibraryProvider,
   type IconLibraryName,
 } from "@/components/icon-placeholder"
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   RADII,
@@ -31,6 +26,16 @@ import {
 
 type VariableStyles = React.CSSProperties & Record<string, string>
 
+/**
+ * Studio shell — intentionally simple.
+ *
+ * Root causes we hit with the previous tweakcn clone:
+ * 1. style-* on <html> restyled the editor chrome itself
+ * 2. 1px resizable handle was covered by preview content → dead clicks
+ * 3. missing isolation made horizontal scroll feel like clipping
+ *
+ * So: fixed sidebar, preview-only style scope, no overlapping hit targets.
+ */
 export function StudioShell() {
   const [presetId, setPresetId] = React.useState<PresetId>("mira-vars")
   const [iconLibrary, setIconLibrary] =
@@ -104,29 +109,30 @@ export function StudioShell() {
     }
   }, [])
 
-  const preset = presets[presetId]
-
+  // Dark mode only on <html>. NEVER put style-* on documentElement —
+  // that leaks density packs into Studio chrome and breaks affordances.
   React.useEffect(() => {
     const root = document.documentElement
     const previous = Array.from(root.classList).filter((c) =>
       c.startsWith("style-")
     )
     for (const c of previous) root.classList.remove(c)
-    root.classList.add(preset.scopeClass)
     root.classList.toggle("dark", dark)
     root.style.colorScheme = dark ? "dark" : "light"
     return () => {
-      root.classList.remove(preset.scopeClass)
       root.classList.remove("dark")
       root.style.colorScheme = ""
     }
-  }, [preset.scopeClass, dark])
+  }, [dark])
 
+  const preset = presets[presetId]
   const radiusValue =
-    RADII.find((item) => item.name === radius)?.value ?? themeDefaults["--radius"]
+    RADII.find((item) => item.name === radius)?.value ??
+    themeDefaults["--radius"]
+  const modeDefaults = dark ? themeDarkDefaults : {}
 
-  const modeDefaults = dark ? themeDarkDefaults : themeDefaults
-
+  // Only inject mode defaults + user overrides into the preview root.
+  // Do not re-declare every light token — let theme.css own the base.
   const previewStyle = {
     ...modeDefaults,
     ...themeOverrides,
@@ -225,28 +231,17 @@ export function StudioShell() {
 
   return (
     <IconLibraryProvider library={iconLibrary}>
-      <div className="flex h-svh flex-col overflow-hidden bg-background text-foreground">
-        <div className="hidden min-h-0 flex-1 md:flex">
-          <ResizablePanelGroup
-            orientation="horizontal"
-            className="size-full"
-          >
-            <ResizablePanel
-              defaultSize="30"
-              minSize="22"
-              maxSize="42"
-              className="min-h-0"
-            >
-              {controls}
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize="70" minSize="40" className="min-h-0">
-              {preview}
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
+      <div className="flex h-svh overflow-hidden bg-background text-foreground">
+        {/* Desktop: fixed sidebar — no overlapping resize hit-target */}
+        <aside className="hidden w-[340px] shrink-0 border-r md:flex md:flex-col">
+          {controls}
+        </aside>
+        <main className="hidden min-h-0 min-w-0 flex-1 flex-col md:flex">
+          {preview}
+        </main>
 
-        <div className="flex min-h-0 flex-1 flex-col md:hidden">
+        {/* Mobile */}
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col md:hidden">
           <Tabs
             value={mobileTab}
             onValueChange={(value) =>
@@ -266,13 +261,13 @@ export function StudioShell() {
             </div>
             <TabsContent
               value="controls"
-              className="m-0 min-h-0 flex-1 overflow-hidden data-hidden:hidden"
+              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
             >
               {controls}
             </TabsContent>
             <TabsContent
               value="preview"
-              className="m-0 min-h-0 flex-1 overflow-hidden data-hidden:hidden"
+              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
             >
               {preview}
             </TabsContent>
