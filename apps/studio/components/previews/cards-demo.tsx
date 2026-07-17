@@ -38,11 +38,6 @@ const chartData = [
   { revenue: 26475, subscription: 89 },
 ]
 
-const chartConfig = {
-  revenue: { label: "Revenue", color: "var(--primary)" },
-  subscription: { label: "Subscriptions", color: "var(--primary)" },
-} satisfies ChartConfig
-
 const plans = [
   {
     id: "starter",
@@ -91,12 +86,10 @@ function CardsStats() {
           <CardDescription>+20.1% from last month</CardDescription>
         </CardHeader>
         <CardContent className="pb-0">
-          <ChartContainer
-            config={chartConfig}
-            className="aspect-auto h-[90px] w-full"
-            initialDimension={{ width: 220, height: 90 }}
-          >
+          <div className="h-[90px] w-full overflow-hidden">
             <LineChart
+              width={220}
+              height={90}
               data={chartData}
               margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
             >
@@ -104,12 +97,12 @@ function CardsStats() {
                 type="monotone"
                 strokeWidth={2}
                 dataKey="revenue"
-                stroke="var(--color-revenue)"
+                stroke="var(--primary)"
                 activeDot={{ r: 6 }}
                 dot={false}
               />
             </LineChart>
-          </ChartContainer>
+          </div>
         </CardContent>
       </Card>
       <Card>
@@ -119,25 +112,23 @@ function CardsStats() {
           <CardDescription>+180.1% from last month</CardDescription>
         </CardHeader>
         <CardContent className="pb-0">
-          <ChartContainer
-            config={chartConfig}
-            className="aspect-auto h-[90px] w-full"
-            initialDimension={{ width: 220, height: 90 }}
-          >
+          <div className="h-[90px] w-full overflow-hidden">
             <AreaChart
+              width={220}
+              height={90}
               data={chartData}
               margin={{ top: 5, right: 0, left: 0, bottom: 0 }}
             >
               <Area
                 type="monotone"
                 dataKey="subscription"
-                stroke="var(--color-subscription)"
-                fill="var(--color-subscription)"
+                stroke="var(--primary)"
+                fill="var(--primary)"
                 fillOpacity={0.2}
                 strokeWidth={2}
               />
             </AreaChart>
-          </ChartContainer>
+          </div>
         </CardContent>
       </Card>
     </div>
