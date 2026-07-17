@@ -12,7 +12,7 @@ import {
   IconLibraryProvider,
   type IconLibraryName,
 } from "@/components/icon-placeholder"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { StudioPreviewPayload } from "@/lib/preview-protocol"
 import {
   RADII,
@@ -200,80 +200,74 @@ export function StudioShell() {
     })
   }
 
-  const controls = (
-    <StudioControls
-      project={project}
-      presetId={presetId}
-      onPresetChange={handlePresetChange}
-      radius={radius}
-      onRadiusChange={handleRadiusChange}
-      iconLibrary={iconLibrary}
-      onIconLibraryChange={setIconLibrary}
-      dark={dark}
-      onDarkChange={setDark}
-      themeOverrides={themeOverrides}
-      styleOverrides={styleOverrides}
-      onThemeTokenChange={(token, value) =>
-        updateToken(token, value, themeDefaults, setThemeOverrides)
-      }
-      onStyleTokenChange={(token, value) =>
-        updateToken(token, value, preset.styleDefaults, setStyleOverrides)
-      }
-      onResetTheme={() => {
-        setThemeOverrides({})
-        setRadius(preset.forcedRadius ?? "medium")
-      }}
-      onResetStyle={() => setStyleOverrides({})}
-      cssExport={cssExport}
-    />
-  )
-
-  const preview = (
-    <PreviewFrame payload={previewPayload} scopeClass={preset.scopeClass} />
-  )
+  const controlsProps = {
+    project,
+    presetId,
+    onPresetChange: handlePresetChange,
+    radius,
+    onRadiusChange: handleRadiusChange,
+    iconLibrary,
+    onIconLibraryChange: setIconLibrary,
+    dark,
+    onDarkChange: setDark,
+    themeOverrides,
+    styleOverrides,
+    onThemeTokenChange: (token: string, value: string) =>
+      updateToken(token, value, themeDefaults, setThemeOverrides),
+    onStyleTokenChange: (token: string, value: string) =>
+      updateToken(token, value, preset.styleDefaults, setStyleOverrides),
+    onResetTheme: () => {
+      setThemeOverrides({})
+      setRadius(preset.forcedRadius ?? "medium")
+    },
+    onResetStyle: () => setStyleOverrides({}),
+    cssExport,
+  } as const
 
   return (
     <IconLibraryProvider library={iconLibrary}>
-      <div className="flex h-svh overflow-hidden bg-background text-foreground">
-        <aside className="hidden w-[340px] shrink-0 border-r md:flex md:flex-col">
-          {controls}
-        </aside>
-        <main className="hidden min-h-0 min-w-0 flex-1 flex-col md:flex">
-          {preview}
-        </main>
-
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col md:hidden">
+      <div className="flex h-svh flex-col overflow-hidden bg-background text-foreground md:flex-row">
+        {/* Mobile-only Controls / Preview switch — single StudioControls instance below */}
+        <div className="relative z-20 shrink-0 border-b px-2 py-2 md:hidden">
           <Tabs
             value={mobileTab}
             onValueChange={(value) =>
               setMobileTab(value as "controls" | "preview")
             }
-            className="flex size-full min-h-0 flex-col"
           >
-            <div className="shrink-0 border-b px-2 py-2">
-              <TabsList className="w-full">
-                <TabsTrigger value="controls" className="flex-1">
-                  Controls
-                </TabsTrigger>
-                <TabsTrigger value="preview" className="flex-1">
-                  Preview
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent
-              value="controls"
-              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
-            >
-              {controls}
-            </TabsContent>
-            <TabsContent
-              value="preview"
-              className="m-0 min-h-0 min-w-0 flex-1 overflow-hidden data-hidden:hidden"
-            >
-              {preview}
-            </TabsContent>
+            <TabsList className="w-full">
+              <TabsTrigger value="controls" className="flex-1 cursor-pointer">
+                Controls
+              </TabsTrigger>
+              <TabsTrigger value="preview" className="flex-1 cursor-pointer">
+                Preview
+              </TabsTrigger>
+            </TabsList>
           </Tabs>
         </div>
+
+        <aside
+          className={
+            mobileTab === "controls"
+              ? "relative z-10 flex min-h-0 w-full flex-1 flex-col border-r md:w-[340px] md:flex-none"
+              : "relative z-10 hidden w-[340px] shrink-0 flex-col border-r md:flex"
+          }
+        >
+          <StudioControls {...controlsProps} />
+        </aside>
+
+        <main
+          className={
+            mobileTab === "preview"
+              ? "flex min-h-0 min-w-0 flex-1 flex-col"
+              : "hidden min-h-0 min-w-0 flex-1 flex-col md:flex"
+          }
+        >
+          <PreviewFrame
+            payload={previewPayload}
+            scopeClass={preset.scopeClass}
+          />
+        </main>
       </div>
     </IconLibraryProvider>
   )

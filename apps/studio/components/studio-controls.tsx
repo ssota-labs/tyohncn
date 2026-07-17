@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   ICON_LIBRARY_OPTIONS,
   IconPlaceholder,
@@ -164,7 +165,13 @@ export function StudioControls({
   }
 
   return (
-    <div className="flex size-full min-h-0 min-w-0 flex-col overflow-hidden bg-background">
+    <Tabs
+      value={controlTab}
+      onValueChange={(value) =>
+        setControlTab(value as "design" | "theme" | "style" | "project")
+      }
+      className="relative z-10 flex size-full min-h-0 min-w-0 flex-col overflow-hidden bg-background"
+    >
       <div className="flex shrink-0 items-center justify-between gap-2 border-b px-4 py-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold tracking-tight">
@@ -186,33 +193,27 @@ export function StudioControls({
         </Button>
       </div>
 
-      <div className="flex shrink-0 gap-1 border-b px-3 py-2">
-        {(
-          [
-            ["design", "Design"],
-            ["theme", "Theme"],
-            ["style", "Style"],
-            ["project", "Project"],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setControlTab(id)}
-            className={cn(
-              "shrink-0 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
-              controlTab === id
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="relative z-20 shrink-0 border-b px-3 py-2">
+        <TabsList variant="line" className="h-9 w-full justify-start">
+          <TabsTrigger value="design" className="cursor-pointer px-2.5">
+            Design
+          </TabsTrigger>
+          <TabsTrigger value="theme" className="cursor-pointer px-2.5">
+            Theme
+          </TabsTrigger>
+          <TabsTrigger value="style" className="cursor-pointer px-2.5">
+            Style
+          </TabsTrigger>
+          <TabsTrigger value="project" className="cursor-pointer px-2.5">
+            Project
+          </TabsTrigger>
+        </TabsList>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
-        {controlTab === "design" ? (
+      <TabsContent
+        value="design"
+        className="m-0 min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 data-hidden:hidden"
+      >
           <div className="grid gap-4">
             <Panel title="Style" icon={<Palette className="size-4" />}>
               <div className="grid gap-2 text-sm font-medium">
@@ -244,7 +245,7 @@ export function StudioControls({
                     type="button"
                     onClick={() => onRadiusChange(item.name)}
                     className={cn(
-                      "rounded-md border px-2.5 py-2 text-left text-xs transition-colors",
+                      "cursor-pointer rounded-md border px-2.5 py-2 text-left text-xs transition-colors",
                       radius === item.name
                         ? "border-foreground bg-muted"
                         : "hover:bg-muted/50"
@@ -324,63 +325,71 @@ export function StudioControls({
               </pre>
             </Panel>
           </div>
-        ) : null}
+      </TabsContent>
 
-        {controlTab === "theme" ? (
-          <Panel
-            title="Theme tokens"
-            icon={<SlidersHorizontal className="size-4" />}
-            action={
-              <ResetButton onClick={onResetTheme}>Reset</ResetButton>
-            }
-          >
-            <div className="grid gap-4">
-              {themeTokenGroups.map((group) => (
-                <div key={group.id} className="grid gap-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                    {group.label}
-                  </p>
-                  <TokenGrid
-                    tokens={group.tokens}
-                    defaults={dark ? { ...themeDefaults, ...themeDarkDefaults } : themeDefaults}
-                    overrides={themeOverrides}
-                    onChange={onThemeTokenChange}
-                  />
-                </div>
-              ))}
-            </div>
-          </Panel>
-        ) : null}
+      <TabsContent
+        value="theme"
+        className="m-0 min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 data-hidden:hidden"
+      >
+        <Panel
+          title="Theme tokens"
+          icon={<SlidersHorizontal className="size-4" />}
+          action={<ResetButton onClick={onResetTheme}>Reset</ResetButton>}
+        >
+          <div className="grid gap-4">
+            {themeTokenGroups.map((group) => (
+              <div key={group.id} className="grid gap-2">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  {group.label}
+                </p>
+                <TokenGrid
+                  tokens={group.tokens}
+                  defaults={
+                    dark
+                      ? { ...themeDefaults, ...themeDarkDefaults }
+                      : themeDefaults
+                  }
+                  overrides={themeOverrides}
+                  onChange={onThemeTokenChange}
+                />
+              </div>
+            ))}
+          </div>
+        </Panel>
+      </TabsContent>
 
-        {controlTab === "style" ? (
-          <Panel
-            title="Style density"
-            icon={<Eye className="size-4" />}
-            action={
-              <ResetButton onClick={onResetStyle}>Reset</ResetButton>
-            }
-          >
-            <TokenGrid
-              tokens={styleTokens}
-              defaults={preset.styleDefaults}
-              overrides={styleOverrides}
-              disabled={!preset.editableStyle}
-              onChange={onStyleTokenChange}
-            />
-            {!preset.editableStyle ? (
-              <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
-                Density variables are editable on *-vars / ssota packs. Apply
-                packs still switch look via scoped CSS.
-              </p>
-            ) : null}
-          </Panel>
-        ) : null}
+      <TabsContent
+        value="style"
+        className="m-0 min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 data-hidden:hidden"
+      >
+        <Panel
+          title="Style density"
+          icon={<Eye className="size-4" />}
+          action={<ResetButton onClick={onResetStyle}>Reset</ResetButton>}
+        >
+          <TokenGrid
+            tokens={styleTokens}
+            defaults={preset.styleDefaults}
+            overrides={styleOverrides}
+            disabled={!preset.editableStyle}
+            onChange={onStyleTokenChange}
+          />
+          {!preset.editableStyle ? (
+            <p className="rounded-lg bg-muted px-3 py-2 text-xs leading-5 text-muted-foreground">
+              Density variables are editable on *-vars / ssota packs. Apply
+              packs still switch look via scoped CSS.
+            </p>
+          ) : null}
+        </Panel>
+      </TabsContent>
 
-        {controlTab === "project" ? (
-          <ProjectMetaPanel project={project} />
-        ) : null}
-      </div>
-    </div>
+      <TabsContent
+        value="project"
+        className="m-0 min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 data-hidden:hidden"
+      >
+        <ProjectMetaPanel project={project} />
+      </TabsContent>
+    </Tabs>
   )
 }
 
